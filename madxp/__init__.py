@@ -109,7 +109,7 @@ def df2run(myDF, command_log=None):
                 if myType=='markdown':
                     pass
                 elif myType=='python':
-                    exec(code['python'], globals()) # very delicate point
+                    exec(code['python']) # local variables
                 elif myType=='madx':
                     madx.input(code['madx'])
                 else:
