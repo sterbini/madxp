@@ -72,10 +72,13 @@ def madx2md(inputFile, outputFile):
             elif myType=='python':
                 myString=myString+ '```python\n# python code\n' + code['python'] + '\n```\n'
             elif myType=='madx':
-                if code['madx'][-1]=='\n':
-                    myString=myString+ '```fortran\n' + code['madx'] + '```\n'
+                if code['madx'].isspace(): # if it is space do nothing
+                    pass
                 else:
-                    myString=myString+ '```fortran\n' + code['madx'] + '\n```\n'
+                    if code['madx'][-1]=='\n':
+                        myString=myString+ '```fortran\n' + code['madx'] + '```\n'
+                    else:
+                        myString=myString+ '```fortran\n' + code['madx'] + '\n```\n'
             else:
                 assert(0)
     with open(outputFile, 'w') as fid:
