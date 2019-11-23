@@ -74,7 +74,7 @@ def madx2md(inputFile, outputFile, verbose=False):
             elif myType=='madx':
                 if verbose: 
                     print(code['madx'])
-                if code['madx'].isspace(): # if it is space do nothing
+                if (code['madx'].isspace()) or (len(code['madx'])==0): # if it is space or empty do nothing
                     pass
                 else:
                     if code['madx'][-1]=='\n':
