@@ -5,7 +5,8 @@ import madxp # do "pip install --user git+https://github.com/sterbini/madxp.git"
 
 # %%
 import pandas as pd
-import numpy as np
+import time
+from cpymad.madx import Madx
 import sys
 
 def madx2df(inputFile):
@@ -88,8 +89,6 @@ def df2madx(myDF):
     return myString
 
 def df2run(myDF, command_log=None):
-    import time
-    from cpymad.madx import Madx
     if command_log==None:
         madx = Madx()
     else:
