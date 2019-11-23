@@ -7,5 +7,5 @@ setup(name='madxp',
       author='Guido STERBINI',
       author_email='guido.sterbini@cern.ch',
       license='MIT',
-      packages=['madx'],
+      packages=['madxp'],
       zip_safe=False)
