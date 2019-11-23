@@ -58,7 +58,7 @@ def splitCodeString(myString):
                 subSectionBefore='madx'
     return codeSubSections
 
-def madx2md(inputFile, outputFile):
+def madx2md(inputFile, outputFile, verbose=False):
     df= madx2df(inputFile)
     myString=''
     for section in df.iterrows():   
@@ -72,6 +72,8 @@ def madx2md(inputFile, outputFile):
             elif myType=='python':
                 myString=myString+ '```python\n# python code\n' + code['python'] + '\n```\n'
             elif myType=='madx':
+                if verbose: 
+                    print(code['madx'])
                 if code['madx'].isspace(): # if it is space do nothing
                     pass
                 else:
