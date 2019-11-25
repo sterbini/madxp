@@ -93,11 +93,10 @@ def df2madx(myDF):
         myString=myString+ '! ## ' +block[0]+ '\n' + block[1]['Code section']
     return myString
 
-def df2run(myDF, command_log=None):
-    if command_log==None:
-        madx = Madx()
-    else:
-        madx = Madx(command_log=command_log)
+def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
+    with open(stdout_file, 'w') as f:
+        madx = Madx(stdout=f, command_log=command_log_file)
+    
     myGlobals=[]
     for section in myDF.iterrows():
         print(section[0])
