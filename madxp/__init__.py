@@ -102,6 +102,7 @@ def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
         print(section[0])
         start_time = time.time()
         codeSubSections=section[1]['Code subsections']
+        pythonDictionary={}
         with madx.batch():
             for code in codeSubSections:
                 myType=list(code.keys())[0]
@@ -117,11 +118,12 @@ def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
         myDict={}
         myDict=dict(madx.globals)
         myDict['execution time [s]']=execution_time_s
+        myDict['pythonDictionary']=pythonDictionary
         myGlobals.append(myDict)
     profileDF=pd.DataFrame(myGlobals, index=myDF.index)
     return profileDF
 
-def madxp(inputFile, outputDF=None): 
+def madxp(inputFile, outputDF='output.pkl'): 
     aux=df2run(madx2df(inputFile))
     if outputDF!=None:
         aux.to_pickle(outputDF);
