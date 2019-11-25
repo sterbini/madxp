@@ -25,8 +25,8 @@ def madx2df(inputFile):
     title=title[1:]
     body=body[1:]
     # built a pandas df
-    aux=pd.DataFrame(body,index=title, columns=['Code string'])
-    aux['Code subsections']=aux['Code string'].apply(splitCodeString)
+    aux=pd.DataFrame(body,index=title, columns=['Code section'])
+    aux['Code subsections']=aux['Code section'].apply(splitCodeString)
     return aux
 
 def splitCodeString(myString):
@@ -90,7 +90,7 @@ def df2madx(myDF):
     myString=''
     for block in myDF.iterrows():
         print(block[0])
-        myString=myString+ '! ## ' +block[0]+ '\n' + block[1]['Code string']
+        myString=myString+ '! ## ' +block[0]+ '\n' + block[1]['Code section']
     return myString
 
 def df2run(myDF, command_log=None):
