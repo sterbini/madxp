@@ -147,7 +147,7 @@ def madxp(inputFile, outputDF='output.pkl', command_log_file='log.madx', stdout_
         command_log_file: the filename of the logging file. Use the None variable not to log.
         stdout_file: the filename of the file to redirect the stdout. Use the None variable not to log.
     '''
-    aux=df2run(madx2df(inputFile,command_log_file=command_log_file, stdout_file=stdout_file))
+    aux=df2run(madx2df(inputFile),command_log_file=command_log_file, stdout_file=stdout_file)
     if outputDF!=None:
         aux.to_pickle(outputDF);
         print('Profiling DF saved.')
