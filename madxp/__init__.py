@@ -94,9 +94,24 @@ def df2madx(myDF):
     return myString
 
 def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
-    with open(stdout_file, 'w') as f:
-        madx = Madx(stdout=f, command_log=command_log_file)
-    
+    '''
+        It runs the MADX dataframe using the MADX extended syntax.
+        myDF: the MADX DF to run
+        command_log_file: the filename of the logging file. Use the None variable not to log.
+        stdout_file: the filename of the file to redirect the stdout. Use the None variable not to log.
+    '''
+    if command_log_file==None:
+        if stdout_file==None:
+            madx = Madx()
+        else:
+            with open(stdout_file, 'w') as f:
+                madx = Madx(stdout=f)
+    else:
+         if stdout_file==None:
+            madx = Madx(command_log=command_log_file)
+        else:
+            with open(stdout_file, 'w') as f:
+                madx = Madx(stdout=f,command_log=command_log_file)
     myGlobals=[]
     for section in myDF.iterrows():
         print(section[0])
@@ -123,8 +138,16 @@ def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
     profileDF=pd.DataFrame(myGlobals, index=myDF.index)
     return profileDF
 
-def madxp(inputFile, outputDF='output.pkl'): 
-    aux=df2run(madx2df(inputFile))
+def madxp(inputFile, outputDF='output.pkl', command_log_file='log.madx', stdout_file='stdout.madx'): 
+   '''
+        It runs the MADX dataframe using the MADX extended syntax.
+        inputFile:  the MADX input file
+        outputDF:   the file to dump the output DF. The MADX variable and the pythonDictionary will be available for all 
+                    code sections
+        command_log_file: the filename of the logging file. Use the None variable not to log.
+        stdout_file: the filename of the file to redirect the stdout. Use the None variable not to log.
+    '''
+    aux=df2run(madx2df(inputFile,command_log_file=command_log_file, stdout_file=stdout_file))
     if outputDF!=None:
         aux.to_pickle(outputDF);
         print('Profiling DF saved.')
