@@ -139,7 +139,7 @@ def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
     return profileDF
 
 def madxp(inputFile, outputDF='output.pkl', command_log_file='log.madx', stdout_file='stdout.madx'): 
-   '''
+    '''
         It runs the MADX dataframe using the MADX extended syntax.
         inputFile:  the MADX input file
         outputDF:   the file to dump the output DF. The MADX variable and the pythonDictionary will be available for all 
