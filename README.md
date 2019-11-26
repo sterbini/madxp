@@ -67,8 +67,8 @@ stop;
 ```
 
 We use MADX comments flexibility to introduce two **special comments**:
-- with **! ** we start a markdown comment (watch the blank)
-- with **// ** we start a python instruction (watch the blank, be careful with indentation)
+- with **!** we start a markdown comment (watch the blank)
+- with **//** we start a python instruction (watch the blank, be careful with indentation)
 
 The input file consists of sections (starting with '! ##') and the input file needs to start with '! ##'.
 One can use :construction:, :question:, :warning: to get easy-to-track information in the markdown file. Not to break compatibility with the codi/gitlab/git/mkdocs markdown dialect we suggest to keep only basic markdown features.
@@ -89,9 +89,10 @@ python -c "import madxp; madxp.madxp('myMadxFile.madx')"
 ```
 
 And you will get automatically
-- log.madx: logging all the MADX input
-- stdout.madx: logging all the MADX stdout
-- output.pkl: logging the MADX variable space in MADX together with the dictionary **pythonDictionary**.
+- **log.madx**: logging all the MADX input
+- **stdout.madx**: logging all the MADX stdout
+- **output.pkl**: logging the MADX variable space in MADX together with the dictionary **pythonDictionary**. You can read this pickle in a pythonic postprocessing session (using *pandas.read_pickle('output.pkl')*): for all code sessions you will get the MADX variables and the saved python variables.
+
 
 Or you can transform a madx file in markdown by
 ```
