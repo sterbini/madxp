@@ -107,7 +107,7 @@ def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
             with open(stdout_file, 'w') as f:
                 madx = Madx(stdout=f)
     else:
-         if stdout_file==None:
+        if stdout_file==None:
             madx = Madx(command_log=command_log_file)
         else:
             with open(stdout_file, 'w') as f:
