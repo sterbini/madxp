@@ -97,7 +97,7 @@ And you will get automatically
 
 We strongly suggest to have different title for each sections and to separate python sections from pure MADX ones. The section will be executed as  a MADX [batch](http://hibtc.github.io/cpymad/cpymad/madx.html#cpymad.madx.Madx.batch). 
 
-:danger: When you interleave a MADX and python code in the same section, be aware that the MADX code will be executed as a batch at the end of the section where as the python code is executed sequentially. For example, the code
+:warning: When you interleave a MADX and python code in the same section, be aware that the MADX code will be executed as a batch at the end of the section where as the python code is executed sequentially. For example, the code
 
 ```
 ! ## Twiss the sequence
