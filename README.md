@@ -1,5 +1,13 @@
 # madxp
-A simple package for augmented MADX syntax using python and markdown
+A simple package for *augmented* MADX syntax using python and markdown.
+
+We propose an augmented MADX syntax with three-fold objective:
+1. to stay fully compatible with the standard MADX syntax and mask/macro file structure,
+2. to produce agile documentation from MADX files using markdown approach,
+3. to run python within the MADX code to improving debugging capability (and scripting flexibility).
+
+We will show how to install the package and a simple example to discuss the conventions used in the augmented MADX syntax.
+
 
 ## Install the package
 You can install the package, for instance on the SWAN terminal (www.swan.cern.ch), using:
@@ -14,17 +22,6 @@ or to upgrade a branch of the project
 ```
 pip install --upgrade --user git+https://github.com/sterbini/madxp.git@branch_name
 ```
-
-## Main motivation
-
-We propose an augmented MADX syntax.
-
-The main idea is three-fold:
-1. to stay fully compatible with the standard MADX syntax.
-2. to produce agile documentation from MADX files (main configuration or macros files) using markdown approach.
-3. to run python during the MADX execution to improving debugging capability (and scripting flexibility)
-
-We will show a simple example to discuss the conventions used in the augmented MADX syntax.
 
 ## Simple example
 Imagine to have the following code
@@ -67,34 +64,63 @@ stop;
 ```
 
 We use MADX comments flexibility to introduce two **special comments**:
-- with **!** we start a markdown comment (watch the blank)
+- with **!** we start a markdown line (watch the blank)
 - with **//** we start a python instruction (watch the blank, be careful with indentation)
 
-The input file consists of sections (starting with '! ##') and the input file needs to start with '! ##'.
-One can use :construction:, :question:, :warning: to get easy-to-track information in the markdown file. Not to break compatibility with the codi/gitlab/git/mkdocs markdown dialect we suggest to keep only basic markdown features.
-We strongly suggest to have different title for each sections and to separate python section from pure MADX ones.
+The input file needs to start with '! ##' and consists of sections (starting with '! ##').
 
-In the python environment you can export use 
+One can use markdown emoji as :construction:, :question:, :warning: to get easy-to-track information in the markdown file. Not to break compatibility with the codi/gitlab/git/mkdocs markdown dialects we suggest to keep only basic markdown features.
+
+
+
+
+In the python environment you can use 
 - the **madx** object to access the MADX variables (as in [cpymad](https://github.com/hibtc/cpymad)). 
-- the **pythonDictionary** can be used to store objects (e.g., twiss dataframes, etc...), that will be dumped in the **output.pkl** (see below).
+- the **pythonDictionary** to store objects (e.g., twiss dataframes, etc...), that will be dumped in the **output.pkl** (see below).
+
 
 
 # How to run
 
 You need to have [cpymad](https://github.com/hibtc/cpymad) installed.
 
-You can use the package from the command line. For you can run an 
+You can use the package from the command line. For example you can run from prompt 
 ```
 python -c "import madxp; madxp.madxp('myMadxFile.madx')"
 ```
 
 And you will get automatically
-- **log.madx**: logging all the MADX input
-- **stdout.madx**: logging all the MADX stdout
-- **output.pkl**: logging the MADX variable space in MADX together with the dictionary **pythonDictionary**. You can read this pickle in a pythonic postprocessing session (using *pandas.read_pickle('output.pkl')*): for all code sessions you will get the MADX variables and the saved python variables.
+- **log.madx**: logging of the MADX input
+- **stdout.madx**: logging of the MADX stdout
+- **output.pkl**: logging of the MADX variable space together with the dictionary **pythonDictionary**. You can read this pickle in a pythonic postprocessing session (using *pandas.read_pickle('output.pkl')*): for all code sections you will get the MADX variables and the saved python variables.
 
 
-Or you can transform a madx file in markdown by
+We strongly suggest to have different title for each sections and to separate python sections from pure MADX ones. The section will be executed as  a MADX [batch](http://hibtc.github.io/cpymad/cpymad/madx.html#cpymad.madx.Madx.batch). 
+
+:danger: When you interleave a MADX and python code in the same section, be aware that the MADX code will be executed as a batch at the end of the section where as the python code is executed sequentially. For example, the code
+
+```
+! ## Twiss the sequence
+use, sequence=myCell;
+twiss, file="myFirstTwiss.txt";
+plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
+// pythonDictionary['twiss']=madx.table.twiss.dframe()
+
+! ## Other section
+```
+will result in an error since, since we try to access the **twiss** table "before" the actual **twiss** command (remember that MADX code is executed in batch at the end of the section). The correct approach is
+```
+! ## Twiss the sequence
+use, sequence=myCell;
+twiss, file="myFirstTwiss.txt";
+plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
+
+! ## Other section
+// pythonDictionary['twiss']=madx.table.twiss.dframe()
+```
+
+
+You can transform a madx file in markdown by
 ```
 python -c "import madxp; madxp.madx2md('myMadxFile.madx','myMadxFile.md')"
 ```
