@@ -92,8 +92,37 @@ python -c "import madxp; madxp.madxp('myMadxFile.madx')"
 And you will get automatically
 - **log.madx**: logging of the MADX input
 - **stdout.madx**: logging of the MADX stdout
-- **output.pkl**: logging of the MADX variable space together with the dictionary **pythonDictionary**. You can read this pickle in a pythonic postprocessing session (using *pandas.read_pickle('output.pkl')*): for all code sections you will get the MADX variables and the saved python variables.
+- **output.pkl**: logging of the MADX variable space together with the dictionary **pythonDictionary**. You can read this pickle in a pythonic postprocessing session and for all code sections you will get the MADX variables and the saved python variables.
+E.g.:
+```python
+import pandas as pd
+myDF=pd.read_pickle('output.pkl')
+myTwiss=myDF.loc['Python data extraction']['pythonDictionary']['twiss']
+```
+will give
+``` fortran
+#s            160.603655
+q1            160.603655
+drift_0[0]     34.217492
+q2             34.217492
+drift_1[0]    160.603655
+#e            160.603655
+```
 
+With a similar approach we can also inspect the MADX variable in the different sections:
+```python
+myDF['myk']
+```
+will give
+``` fortran
+Introduction                 NaN
+Define the elements       0.0056
+Define the sequence       0.0056
+Define the beam           0.0056
+Twiss the sequence        0.0056
+Python data extraction    0.0056
+End                       0.0056
+```
 
 We strongly suggest to have different title for each sections and to separate python sections from pure MADX ones. The section will be executed as  a MADX [batch](http://hibtc.github.io/cpymad/cpymad/madx.html#cpymad.madx.Madx.batch). 
 
