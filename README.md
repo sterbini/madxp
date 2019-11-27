@@ -1,9 +1,9 @@
 # madxp
 A simple package for *augmented* MADX syntax using python and markdown.
 
-We propose an augmented MADX syntax with three-fold objective:
+We propose an augmented MADX syntax with a three-fold objective:
 1. to stay fully compatible with the standard MADX syntax and mask/macro file structure,
-2. to produce agile documentation from MADX files using markdown approach,
+2. to produce agile documentation from MADX files using markdown approach, with the principle that the documentation is *in* the code,
 3. to run python within the MADX code to improving debugging capability (and scripting flexibility).
 
 We will show how to install the package and a simple example to discuss the conventions used in the augmented MADX syntax.
