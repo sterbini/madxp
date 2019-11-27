@@ -100,7 +100,7 @@ myDF=pd.read_pickle('output.pkl')
 myTwiss=myDF.loc['Python data extraction']['pythonDictionary']['twiss']
 ```
 will give
-``` fortran
+``` 
 #s            160.603655
 q1            160.603655
 drift_0[0]     34.217492
@@ -114,7 +114,7 @@ With a similar approach we can also inspect the MADX variable in the different s
 myDF['myk']
 ```
 will give
-``` fortran
+``` 
 Introduction                 NaN
 Define the elements       0.0056
 Define the sequence       0.0056
