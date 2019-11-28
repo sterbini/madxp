@@ -126,7 +126,8 @@ End                       0.0056
 
 We strongly suggest to have different title for each sections and to separate python sections from pure MADX ones. The section will be executed as  a MADX [batch](http://hibtc.github.io/cpymad/cpymad/madx.html#cpymad.madx.Madx.batch). 
 
-:warning: When you interleave a MADX and a python code in the same section, be aware that the MADX code will be executed as a batch at the end of the section whereas the python code is executed sequentially. For example, the code
+:warning: At the moment we prevent you to have MADX and python code in the same section for the following reason (an exeption is raised if you try it).
+If one could interleave a MADX and a python code in the same section, the MADX code would be executed as a batch at the end of the section whereas the python code would be executed sequentially. For example, the code
 
 ```
 ! ## Twiss the sequence
@@ -137,7 +138,7 @@ plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
 
 ! ## Other section
 ```
-will result in an error since, since we try to access the **twiss** table "before" the actual **twiss** command (remember that MADX code is executed in batch at the end of the section). The correct approach is
+will result in a logic error since, since we woudl try to access the **twiss** table "before" the actual **twiss** command (remember that MADX code is executed in batch at the end of the section). The correct approach (the enforced one) is
 ```
 ! ## Twiss the sequence
 use, sequence=myCell;
@@ -147,6 +148,7 @@ plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
 ! ## Other section
 // pythonDictionary['twiss']=madx.table.twiss.dframe()
 ```
+
 
 
 You can transform a madx file in markdown by
