@@ -9,4 +9,3 @@ myDF
 
 # %% Make markdown
 madxp.madx2md('input.madx','input.md')
-
