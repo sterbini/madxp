@@ -10,6 +10,11 @@ from cpymad.madx import Madx
 import sys
 
 def madx2df(inputFile):
+    '''
+        It converts a MADX file into a pandas dataframe. The index of the dataframe are the sections of the MADX code.
+        There are two columns "Code section" and "Code subsections" having the raw code of the sections and the output of the 
+        "splitCodeString" method (applied to the "Code section"), respectively. 
+    '''
     with open(inputFile) as fid:
             mask_content = fid.read()
     # I am assuming that the start of the file is '! ## '
@@ -31,7 +36,7 @@ def madx2df(inputFile):
 
 def splitCodeString(myString):
     ''' 
-    It takes a string and return a list of tuples.
+        It takes a string and return a list of dictionary having as keys the string "markdown", "python" or "madx".
     '''
     subSectionBefore='none'
     codeSubSections=[]
@@ -59,6 +64,12 @@ def splitCodeString(myString):
     return codeSubSections
 
 def madx2md(inputFile, outputFile, verbose=False):
+    '''
+        It converts a MADX file into a markdown file.
+        inputFile: the MADX input file.
+        outputFile: the makdown output file.
+        verbose: boolean flag to have verbose output during the execution.
+    '''
     df= madx2df(inputFile)
     myString=''
     for section in df.iterrows():   
@@ -87,6 +98,9 @@ def madx2md(inputFile, outputFile, verbose=False):
         fid.write(myString)
 
 def df2madx(myDF):
+    '''
+        It converts a MADX dataframe into a MADX string that can be, eventually, dumped in a file.
+    '''
     myString=''
     for block in myDF.iterrows():
         print(block[0])
@@ -96,7 +110,7 @@ def df2madx(myDF):
 def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
     '''
         It runs the MADX dataframe using the MADX extended syntax.
-        myDF: the MADX DF to run
+        myDF: the MADX DF to run.
         command_log_file: the filename of the logging file. Use the None variable not to log.
         stdout_file: the filename of the file to redirect the stdout. Use the None variable not to log.
     '''
@@ -141,9 +155,9 @@ def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
 def madxp(inputFile, outputDF='output.pkl', command_log_file='log.madx', stdout_file='stdout.madx'): 
     '''
         It runs the MADX dataframe using the MADX extended syntax.
-        inputFile:  the MADX input file
+        inputFile:  the MADX input file.
         outputDF:   the file to dump the output DF. The MADX variable and the pythonDictionary will be available for all 
-                    code sections
+                    code sections.
         command_log_file: the filename of the logging file. Use the None variable not to log.
         stdout_file: the filename of the file to redirect the stdout. Use the None variable not to log.
     '''
