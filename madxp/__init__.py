@@ -133,6 +133,9 @@ def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
         codeSubSections=section[1]['Code subsections']
         pythonDictionary={}
         with madx.batch():
+            myCheck=[list(code.keys())[0] for code in codeSubSections]
+            if ('madx' in myCheck) & ('python' in myCheck):
+                raise Exception('Do not put madx and python code in the same section!')
             for code in codeSubSections:
                 myType=list(code.keys())[0]
                 if myType=='markdown':
@@ -148,6 +151,8 @@ def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
         myDict=dict(madx.globals)
         myDict['execution time [s]']=execution_time_s
         myDict['pythonDictionary']=pythonDictionary
+        myDict['Code subsections']=section[1]['Code subsections']
+        myDict['Code section']=section[1]['Code section']
         myGlobals.append(myDict)
     profileDF=pd.DataFrame(myGlobals, index=myDF.index)
     return profileDF
