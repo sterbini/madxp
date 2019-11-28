@@ -1,0 +1,5 @@
+.vscode/settings.json
+examples/simpleFodo/log.madx
+examples/simpleFodo/stdout.madx
+examples/simpleFodo/myFirstTwiss.txt
+examples/simpleFodo/madx.ps

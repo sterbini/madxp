@@ -1,0 +1,35 @@
+! ## Introduction
+! In this example we are going to solve a simple FODO lattice.
+
+! ## Define the elements
+! Define the geometrical parameters
+quadrupoleLength=5;
+cellLength=100;
+
+! Define the gradient
+myK=2.8/cellLength/quadrupoleLength;
+
+! Define the quadrupoles
+QF: quadrupole, L=quadrupoleLength, K1=myK;
+QD: quadrupole, L=quadrupoleLength, K1=-myK;
+
+! ## Define the sequence
+myCell:sequence, refer=entry, L=cellLength;
+q1: QF, at=0;
+q2: QD, at=cellLength/2;
+endsequence;
+
+! ## Define the beam
+beam, particle=proton, energy=7000;
+
+! ## Twiss the sequence
+use, sequence=myCell;
+twiss, file="myFirstTwiss.txt";
+plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
+value, myK;
+
+! ## Python data extraction
+// pythonDictionary['twiss']=madx.table.twiss.dframe()
+
+! ## End
+stop;

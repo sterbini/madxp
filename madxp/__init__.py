@@ -107,12 +107,13 @@ def df2madx(myDF):
         myString=myString+ '! ## ' +block[0]+ '\n' + block[1]['Code section']
     return myString
 
-def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
+def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx', verbose=False):
     '''
         It runs the MADX dataframe using the MADX extended syntax.
         myDF: the MADX DF to run.
         command_log_file: the filename of the logging file. Use the None variable not to log.
         stdout_file: the filename of the file to redirect the stdout. Use the None variable not to log.
+        verbose: boolean flag to have verbose output during the execution.
     '''
     if command_log_file==None:
         if stdout_file==None:
@@ -134,6 +135,7 @@ def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx'):
         pythonDictionary={}
         with madx.batch():
             myCheck=[list(code.keys())[0] for code in codeSubSections]
+            if verbose: print(codeSubSections)
             if ('madx' in myCheck) & ('python' in myCheck):
                 raise Exception('Do not put madx and python code in the same section!')
             for code in codeSubSections:
