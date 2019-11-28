@@ -1,6 +1,6 @@
 # %%
 import madxp; 
-madxp.madxp('input.madx')
+madxp.madxp('input.madx', verbose=True)
 
 # %%
 ! pwd

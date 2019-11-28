@@ -61,6 +61,11 @@ def splitCodeString(myString):
             else:
                 codeSubSections.append({'madx':line})
                 subSectionBefore='madx'
+        # cleaning 
+        for item,index in zip(codeSubSections, range(len(codeSubSections))):
+            if list(item.keys())[0]=='madx':
+                if item['madx'].isspace():
+                    del codeSubSections[index]
     return codeSubSections
 
 def madx2md(inputFile, outputFile, verbose=False):
