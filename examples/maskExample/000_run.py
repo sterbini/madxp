@@ -8,4 +8,4 @@ myDF=pd.read_pickle('output.pkl')
 myDF
 
 # %% Make markdown
-madxp.madx2md('input.madx','input.md')
+madxp.madx2md('mask.madx','mask.md')

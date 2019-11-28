@@ -30,7 +30,7 @@
   !
   ! One defines few flags:
   ! - **ON_COLLISION**
-  ! - **ON_BB_SWITCH*
+  ! - **ON_BB_SWITCH**
   ! - and the bunch coarse spacing.
   ! 
   ! The the beam parameters such as
