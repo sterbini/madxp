@@ -64,7 +64,7 @@ def splitCodeString(myString):
     # cleaning 
     for item,index in zip(codeSubSections, range(len(codeSubSections))):
         if list(item.keys())[0]=='madx':
-            if item['madx'].isspace():
+            if (item['madx'].isspace()) or (item['madx']==''):
                 del codeSubSections[index]
     return codeSubSections
 
