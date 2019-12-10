@@ -112,7 +112,7 @@ def df2madx(myDF):
         myString=myString+ '! ## ' +block[0]+ '\n' + block[1]['Code section']
     return myString
 
-def df2run(myDF, command_log_file='log.madx', stdout_file='stdout.madx', verbose=False):
+def df2run(myDF, pythonData=None, command_log_file='log.madx', stdout_file='stdout.madx', verbose=False):
     '''
         It runs the MADX dataframe using the MADX extended syntax.
         myDF: the MADX DF to run.
