@@ -164,7 +164,7 @@ def df2run(myDF, pythonData=None, command_log_file='log.madx', stdout_file='stdo
     profileDF=pd.DataFrame(myGlobals, index=myDF.index)
     return profileDF
 
-def madxp(inputFile, outputDF='output.pkl', command_log_file='log.madx', stdout_file='stdout.madx', verbose=False): 
+def madxp(inputFile, pythonData=None, outputDF='output.pkl', command_log_file='log.madx', stdout_file='stdout.madx', verbose=False): 
     '''
         It runs the MADX dataframe using the MADX extended syntax.
         inputFile:  the MADX input file.
@@ -174,7 +174,7 @@ def madxp(inputFile, outputDF='output.pkl', command_log_file='log.madx', stdout_
         stdout_file: the filename of the file to redirect the stdout. Use the None variable not to log.
         verbose: boolean flag to have verbose output during the execution.
     '''
-    aux=df2run(madx2df(inputFile),command_log_file=command_log_file, stdout_file=stdout_file, verbose=verbose)
+    aux=df2run(madx2df(inputFile), pythonData=pythonData, command_log_file=command_log_file, stdout_file=stdout_file, verbose=verbose)
     if outputDF!=None:
         aux.to_pickle(outputDF);
         print('Profiling DF saved.')
