@@ -26,48 +26,48 @@ pip install --upgrade --user git+https://github.com/sterbini/madxp.git@branch_na
 ## Simple example
 Imagine to have the following code
 ```
-! ## Introduction
-! In this example we are going to solve a simple FODO lattice.
+!## Introduction
+!In this example we are going to solve a simple FODO lattice.
 
-! ## Define the elements
-! Define the geometrical parameters
-quadrupoleLength=5;
-cellLength=100;
+!## Define the elements
+!Define the geometrical parameters
+ quadrupoleLength=5;
+ cellLength=100;
 
-! Define the gradient
-myK=2.8/cellLength/quadrupoleLength;
+!## Define the gradient
+ myK=2.8/cellLength/quadrupoleLength;
 
-! Define the quadrupoles
-QF: quadrupole, L=quadrupoleLength, K1=myK;
-QD: quadrupole, L=quadrupoleLength, K1=-myK;
+!## Define the quadrupoles
+ QF: quadrupole, L=quadrupoleLength, K1=myK;
+ QD: quadrupole, L=quadrupoleLength, K1=-myK;
 
-! ## Define the sequence
-myCell:sequence, refer=entry, L=cellLength;
-q1: QF, at=0;
-q2: QD, at=cellLength/2;
-endsequence;
+!## Define the sequence
+ myCell:sequence, refer=entry, L=cellLength;
+ q1: QF, at=0;
+ q2: QD, at=cellLength/2;
+ endsequence;
 
-! ## Define the beam
-beam, particle=proton, energy=7000;
+!## Define the beam
+ beam, particle=proton, energy=7000;
 
-! ## Twiss the sequence
-use, sequence=myCell;
-twiss, file="myFirstTwiss.txt";
-plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
-value, myK;
+!## Twiss the sequence
+ use, sequence=myCell;
+ twiss, file="myFirstTwiss.txt";
+ plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
+ value, myK;
 
-! ## Python data extraction
-// pythonDictionary['twiss']=madx.table.twiss.dframe()
+!## Python data extraction
+ //pythonDictionary['twiss']=madx.table.twiss.dframe()
 
-! ## End
-stop;
+!## End
+ stop;
 ```
 
 We use MADX comments flexibility to introduce two **special comments**:
-- with **!** we start a markdown line (watch the blank)
-- with **//** we start a python instruction (watch the blank, be careful with indentation)
+- with **!** we start a markdown line
+- with **//** we start a python instruction (be careful with indentation)
 
-The input file needs to start with '! ##' and consists of sections (starting with '! ##').
+The input file needs to start with '!##' and consists of sections (starting with '!##').
 
 One can use markdown emoji as :construction:, :question:, :warning: to get easy-to-track information in the markdown file. Not to break compatibility with the codi/gitlab/git/mkdocs markdown dialects we suggest to keep only basic markdown features.
 
@@ -130,23 +130,23 @@ We strongly suggest to have different title for each sections and to separate py
 If one could interleave a MADX and a python code in the same section, the MADX code would be executed as a batch at the end of the section whereas the python code would be executed sequentially. For example, the code
 
 ```
-! ## Twiss the sequence
-use, sequence=myCell;
-twiss, file="myFirstTwiss.txt";
-plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
-// pythonDictionary['twiss']=madx.table.twiss.dframe()
+!## Twiss the sequence
+ use, sequence=myCell;
+ twiss, file="myFirstTwiss.txt";
+ plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
+ //pythonDictionary['twiss']=madx.table.twiss.dframe()
 
-! ## Other section
+!## Other section
 ```
 will result in a logic error since, since we woudl try to access the **twiss** table "before" the actual **twiss** command (remember that MADX code is executed in batch at the end of the section). The correct approach (the enforced one) is
 ```
-! ## Twiss the sequence
-use, sequence=myCell;
-twiss, file="myFirstTwiss.txt";
-plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
+!## Twiss the sequence
+ use, sequence=myCell;
+ twiss, file="myFirstTwiss.txt";
+ plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
 
-! ## Other section
-// pythonDictionary['twiss']=madx.table.twiss.dframe()
+!## Other section
+ // pythonDictionary['twiss']=madx.table.twiss.dframe()
 ```
 
 

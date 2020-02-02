@@ -17,10 +17,10 @@ def madx2df(inputFile):
     '''
     with open(inputFile) as fid:
             mask_content = fid.read()
-    # I am assuming that the start of the file is '! ## '
-    assert(mask_content[0:5]=="! ## ")
+    # I am assuming that the start of the file is '!## '
+    assert(mask_content[0:4]=="!## ")
     # We split the mask
-    aux=mask_content.split("! ## ") 
+    aux=mask_content.split("!## ") 
     title=[]
     body=[]
     for i in aux:
@@ -49,7 +49,7 @@ def splitCodeString(myString):
                 codeSubSections.append({'markdown':line})
                 subSectionBefore='markdown'
         elif line.strip().startswith('//'):
-            line=line.strip()[3:]
+            line=line.strip()[2:]
             if subSectionBefore=='python':
                 codeSubSections[-1]['python']=codeSubSections[-1]['python']+'\n'+line
             else:
@@ -109,7 +109,7 @@ def df2madx(myDF):
     myString=''
     for block in myDF.iterrows():
         print(block[0])
-        myString=myString+ '! ## ' +block[0]+ '\n' + block[1]['Code section']
+        myString=myString+ '!## ' +block[0]+ '\n' + block[1]['Code section']
     return myString
 
 def df2run(myDF, pythonData=None, command_log_file='log.madx', stdout_file='stdout.madx', verbose=False):
