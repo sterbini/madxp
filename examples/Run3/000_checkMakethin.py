@@ -47,5 +47,6 @@ plt.xlabel('slicefactor')
 plt.ylabel('fractional tunes')
 plt.grid(True)
 plt.legend(loc='best')
-
+# %%
+madxp.madx2md('input_thin.madx','input_thin.md')
 # %%
