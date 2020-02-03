@@ -5,7 +5,7 @@
 !Define the geometrical parameters
  quadrupoleLength=5;
  cellLength=100;
-
+ 
 !## Define the gradient
  myK=2.8/cellLength/quadrupoleLength;
 

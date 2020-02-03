@@ -1,6 +1,12 @@
 # %% Run it
-import madxp; 
-madxp.madxp('input.madx', verbose=True)
+import madxp;
+try:
+    madxp.madxp('input.madx')
+except FileNotFoundError:
+    import os
+    os.chdir('./examples/simpleFodo')
+    madxp.madxp('input.madx')
+
 
 # %% Read the output.pkl
 import pandas as pd
