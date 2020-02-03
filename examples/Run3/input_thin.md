@@ -1,5 +1,5 @@
 ## Simple make thin of Run3
-The purpose of this file is to compute the Q4/Q5 feedforward for the wire.
+The purpose of this file is make an example of python scripting in a mask.
 
 ## Contributors
 **S. Fartoukh**
