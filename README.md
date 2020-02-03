@@ -1,12 +1,12 @@
 # madxp
 A simple package for *augmented* MADX syntax using python and markdown.
 
-We propose an augmented MADX syntax with a three-fold objective:
+We propose an *augmented* MADX syntax with a three-fold objective:
 1. to stay fully compatible with the standard MADX syntax and mask/macro file structure,
-2. to produce agile documentation from MADX files using markdown approach, with the principle that the documentation is *in* the code,
+2. to produce agile documentation from MADX files using markdown approach, with the principle that the documentation is *in* the code (in doing so improving the maintanability of the documentation),
 3. to run python within the MADX code to improving debugging capability (and scripting flexibility).
 
-We will show how to install the package and a simple example to discuss the conventions used in the augmented MADX syntax.
+We will show how to install the package and a simple example to discuss the conventions adopted.
 
 
 ## Install the package
@@ -27,7 +27,7 @@ pip install --upgrade --user git+https://github.com/sterbini/madxp.git@branch_na
 Imagine to have the following code
 ```
 !## Introduction
-!In this example we are going to solve a simple FODO lattice.
+ !In this example we are going to solve a simple FODO lattice.
 
 !## Define the elements
 !Define the geometrical parameters
@@ -69,10 +69,7 @@ We use MADX comments flexibility to introduce two **special comments**:
 
 The input file needs to start with '!##' and consists of sections (starting with '!##').
 
-One can use markdown emoji as :construction:, :question:, :warning: to get easy-to-track information in the markdown file. Not to break compatibility with the codi/gitlab/git/mkdocs markdown dialects we suggest to keep only basic markdown features.
-
-
-
+One can use markdown emoji as :construction:, :question:, :warning: to get easy-to-track information in the markdown file. Not to break compatibility with the codi/gitlab/git/mkdocs markdown dialects we suggest to keep only basic markdown features. Our priviledged markdown dialect is the one of mkdocs.
 
 In the python environment you can use 
 - the **madx** object to access the MADX variables (as in [cpymad](https://github.com/hibtc/cpymad)). 
@@ -82,7 +79,7 @@ In the python environment you can use
 
 # How to run
 
-You need to have [cpymad](https://github.com/hibtc/cpymad) installed.
+This package is quite a basic code built around [cpymad](https://github.com/hibtc/cpymad): you need to have [cpymad](https://github.com/hibtc/cpymad)  installed.
 
 You can use the package from the command line. For example you can run from prompt 
 ```
@@ -93,7 +90,7 @@ And you will get automatically
 - **log.madx**: logging of the MADX input
 - **stdout.madx**: logging of the MADX stdout
 - **output.pkl**: logging of the MADX variable space together with the dictionary **pythonDictionary**. You can read this pickle in a pythonic postprocessing session and for all code sections you will get the MADX variables and the saved python variables.
-E.g.:
+E.g.,:
 ```python
 import pandas as pd
 myDF=pd.read_pickle('output.pkl')
@@ -124,7 +121,7 @@ Python data extraction    0.0056
 End                       0.0056
 ```
 
-We strongly suggest to have different title for each sections and to separate python sections from pure MADX ones. The section will be executed as  a MADX [batch](http://hibtc.github.io/cpymad/cpymad/madx.html#cpymad.madx.Madx.batch). 
+We strongly suggest to have different title for each sections and to separate python sections from pure MADX ones. The section will be executed as a MADX [batch](http://hibtc.github.io/cpymad/cpymad/madx.html#cpymad.madx.Madx.batch). 
 
 :warning: At the moment we prevent you to have MADX and python code in the same section for the following reason (an exeption is raised if you try it).
 If one could interleave a MADX and a python code in the same section, the MADX code would be executed as a batch at the end of the section whereas the python code would be executed sequentially. For example, the code
@@ -138,7 +135,7 @@ If one could interleave a MADX and a python code in the same section, the MADX c
 
 !## Other section
 ```
-will result in a logic error since, since we woudl try to access the **twiss** table "before" the actual **twiss** command (remember that MADX code is executed in batch at the end of the section). The correct approach (the enforced one) is
+will result in a logic error since, since we would try to access the **twiss** table "before" the actual **twiss** command (remember that MADX code is executed in batch at the end of the section). The correct approach (the enforced one) is
 ```
 !## Twiss the sequence
  use, sequence=myCell;
@@ -146,7 +143,7 @@ will result in a logic error since, since we woudl try to access the **twiss** t
  plot, haxis=s, vaxis=betx,bety,dx,colour=100, title="First plot";
 
 !## Other section
- // pythonDictionary['twiss']=madx.table.twiss.dframe()
+ //pythonDictionary['twiss']=madx.table.twiss.dframe()
 ```
 
 
@@ -156,7 +153,7 @@ You can transform a madx file in markdown by
 python -c "import madxp; madxp.madx2md('myMadxFile.madx','myMadxFile.md')"
 ```
 
-In the following we print the myMadxFile.md
+As an example, in the following we print the myMadxFile.md
 
 ## Introduction
  In this example we are going to solve a simple FODO lattice.
