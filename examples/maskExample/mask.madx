@@ -1,10 +1,11 @@
 !## Header and contributors
   !This file (mask) is the results of the work of many contributors. Aknowledgments go to
-  !**S. Fartoukh**
-  !**M. Giovannozzi**
-  !**R. De Maria**
-  !**F. Van Der Veken**
-  !**D. Pellegrini**
+  !
+  !- **S. Fartoukh**
+  !- **M. Giovannozzi**
+  !- **R. De Maria**
+  !- **F. Van Der Veken**
+  !- **D. Pellegrini**
   !
   !The first steps of the mask is to assign the proper symbolic links used afterward for calling
   !
