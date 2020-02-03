@@ -4,7 +4,7 @@ try:
     madxp.madxp('input.madx')
 except FileNotFoundError:
     import os
-    os.chdir('./examples/simpleFodo')
+    os.chdir('/afs/cern.ch/work/s/sterbini/madxp/examples/simpleFodo')
     madxp.madxp('input.madx')
 
 

@@ -1,19 +1,19 @@
-! ## Simple make thin of Run3
-! The purpose of this file is to compute the Q4/Q5 feedforward for the wire.
+!## Simple make thin of Run3
+!The purpose of this file is to compute the Q4/Q5 feedforward for the wire.
 !
-! ## Contributors
-! **S. Fartoukh**
+!## Contributors
+!**S. Fartoukh**
 
-! ## Prepare the links
+!## Prepare the links
 option, -echo, -info, -warn;
 system,"ln -fns /afs/cern.ch/eng/lhc/optics/runII/2018 db2018";
 system,"ln -fns /afs/cern.ch/eng/lhc/optics/runIII/RunIII_dev dbrun3";
 
-! ## Call the sequence     
+!## Call the sequence     
 call,file="db2018/lhc_as-built.seq";
 call,file="dbrun3/IR7-Run3seqedit.madx";
 
-! ## Call optics file
+!## Call optics file
 call,file="dbrun3/2021/PROTON/opticsfile.28";
 
 epsxn=2.2e-6;
@@ -28,14 +28,14 @@ slicefactor=4;
 option rbarc=true;
 makedipedgevalue=0;
 
-! ## Python: settings
-// if 1:
-//     madx.input(f'''
-//     slicefactor={pythonData["slicefactor"]};
-//     option rbarc={pythonData["rbarc"]};
-//     makedipedgevalue={pythonData["makedipedgevalue"]};''')
+!## Python: settings
+//if 1:
+//  madx.input(f'''
+//  slicefactor={pythonData["slicefactor"]};
+//  option rbarc={pythonData["rbarc"]};
+//  makedipedgevalue={pythonData["makedipedgevalue"]};''')
 
-! ## Make B1 thin
+!## Make B1 thin
 call, file = "db2018/toolkit/myslice.madx";
 use,sequence=lhcb1;
 if (makedipedgevalue==1){
@@ -48,10 +48,10 @@ use,sequence=lhcb1;
 twiss;
 
 
-! ## Python: Test B1
-// pythonData['B1summ']=madx.table.summ.dframe()
+!## Python: Test B1
+//pythonData['B1summ']=madx.table.summ.dframe()
 
-! ## Make B2 thin
+!## Make B2 thin
 use,sequence=lhcb2;
 if (makedipedgevalue==1){
 makethin, sequence=lhcb2, style=teapot, makedipedge=true;
@@ -62,5 +62,5 @@ makethin, sequence=lhcb2, style=teapot, makedipedge=false;
 use,sequence=lhcb2;
 twiss;
 
-! ## Python: Test B2
-// pythonData['B2summ']=madx.table.summ.dframe()
+!## Python: Test B2
+//pythonData['B2summ']=madx.table.summ.dframe()
