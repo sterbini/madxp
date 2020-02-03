@@ -305,7 +305,7 @@ Long-range in all IRs
 
 ```
 ## REMOVE_BB_MARKER
-It removes the class *bbmarker** in **lhcb1** and **lhcb1**.
+It removes the class **bbmarker** in **lhcb1** and **lhcb1**.
 :warning: It is not defined for **lhcb4**.
 ```fortran
 

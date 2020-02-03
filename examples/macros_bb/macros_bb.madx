@@ -279,7 +279,7 @@ INSTALL_BB_MARK(BIM) : macro = {
 };
 
 !## REMOVE_BB_MARKER
-!It removes the class *bbmarker** in **lhcb1** and **lhcb1**.
+!It removes the class **bbmarker** in **lhcb1** and **lhcb1**.
 !:warning: It is not defined for **lhcb4**.
 
 REMOVE_BB_MARKER : macro = {
