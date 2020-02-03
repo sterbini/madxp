@@ -23,7 +23,7 @@ for makedipedgevalue in [0,1]:
             madxp.madxp('input_thin.madx', pythonData=pythonData)
         except FileNotFoundError:
             import os
-            os.chdir('/afs/cern.ch/work/s/sterbini/madxp/examples/Run3')
+            os.chdir('/afs/cern.ch/work/s/sterbini/madxp/examples/run3')
             madxp.madxp('input_thin.madx', pythonData=pythonData)
         myList.append(copy.deepcopy(pythonData)) # to append the pythonData dictionary
         gc.collect() # to free memory
