@@ -146,7 +146,7 @@ will result in a logic error since, since we would try to access the **twiss** t
  //pythonDictionary['twiss']=madx.table.twiss.dframe()
 ```
 
-
+## From MADX to markdown documentation
 
 You can transform a madx file in markdown by
 ```
