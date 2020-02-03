@@ -1,11 +1,18 @@
 # %% Run it
 import madxp; 
-madxp.madxp('mask.madx', verbose=True)
+try: 
+    madxp.madxp('mask.madx', verbose=False)
+except :
+    import os
+    os.chdir('/afs/cern.ch/work/s/sterbini/madxp/examples/maskExample')# %% Read the output.pkl
+    madxp.madxp('mask.madx', verbose=False)
 
-# %% Read the output.pkl
+# %%
 import pandas as pd
 myDF=pd.read_pickle('output.pkl')
 myDF
 
 # %% Make markdown
 madxp.madx2md('mask.madx','mask.md')
+
+# %%
