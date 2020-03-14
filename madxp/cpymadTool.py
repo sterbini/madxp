@@ -3,8 +3,20 @@ import numpy as np
 import cpymad
 import itertools
 
-def sequencesDF(madHandle):
-    sequences=madHandle.sequence
+def sequencesDF(mad):
+    '''
+    Extract the pandas DF with the list of the sequences defined in the MAD-X handle.
+    
+    Args:
+        mad: The handle to MAD-X
+    
+    Returns:
+        The pandas DF of the sequences. It can be and empty DF.
+    
+    See madxp/examples/variablesExamples/000_run.py
+
+    '''
+    sequences=mad.sequence
     seqDict={}
     for ii in sequences:
         seqDict[ii]={}
@@ -18,17 +30,41 @@ def sequencesDF(madHandle):
             seqDict[ii]['expanded']=False
     return pd.DataFrame(seqDict).transpose()
 
-def beamsDF(madHandle):
+def beamsDF(mad):
+    '''
+    Extract the pandas DF with the beams associated to the sequences defined in the MAD-X handle.
+    
+    Args:
+        mad: The handle to MAD-X
+    
+    Returns:
+        The pandas DF of the beams. It can be and empty DF.
+
+    See madxp/examples/variablesExamples/000_run.py
+    '''
     dfList=[]
-    sequences=madHandle.sequence
+    sequences=mad.sequence
     for ii in sequences:
-        dfList.append(pd.DataFrame([dict(sequences[ii].beam)], index=[ii]))
+        try:
+            dfList.append(pd.DataFrame([dict(sequences[ii].beam)], index=[ii]))
+        except:
+            print(f'The sequence {ii} has no beam attached.')
     if len(dfList)>0:
         return pd.concat(dfList)
     else:
         return pd.DataFrame()
 
 def _extractParameters(mystring):
+    '''
+    Extract all the parameters of a MAD-X expression.
+
+    Args:
+        mystring: The string of the MAD-X expression to parse.
+    
+    Returns:
+        The list of the parameters present in the MAD-X expression.
+
+    '''
     if type(mystring)=='NoneType' or mystring==None or mystring=='None' or mystring=='[None]':
         return []
     else:
@@ -72,10 +108,26 @@ def _extractParameters(mystring):
             'tgauss']))
         return myList 
 
-def dependentVariablesDF(madHandle):
+def dependentVariablesDF(mad):
+    '''
+    Extract the pandas DF with the dependent variables of the MAD-X handle.
+    
+    Args:
+        mad: The handle to MAD-X
+    
+    Returns:
+        The pandas DF of the dependent variables. The columns of the DF correspond to the 
+        - the numerical value of the dependent variable (value)
+        - the string corrensponding to the MAD-X expression (expression)
+        - the list of parameters used in the expression (parameters)
+        - the list of the fundamental independent variables. 
+          These are independent variables that control numerical values of the variable (knobs).
+    
+    See madxp/examples/variablesExamples/000_run.py
+    '''
     myDict={}
-    for i in list(madHandle.globals):
-        aux=_extractParameters(str(madHandle._libmadx.get_var(i)))
+    for i in list(mad.globals):
+        aux=_extractParameters(str(mad._libmadx.get_var(i)))
         if aux!=[]:
             myDict[i]={}
             myDict[i]['parameters']=list(np.unique(aux))
@@ -97,14 +149,30 @@ def dependentVariablesDF(madHandle):
     
     for i in myDict:
         for j in myDict[i]['knobs'].copy():
-            if madHandle._libmadx.get_var_type(j)==0:
+            if mad._libmadx.get_var_type(j)==0:
                 myDict[i]['knobs'].remove(j)
-        myDict[i]['expression']=madHandle._libmadx.get_var(i)
-        myDict[i]['value']=madHandle.globals[i]
+        myDict[i]['expression']=mad._libmadx.get_var(i)
+        myDict[i]['value']=mad.globals[i]
     
     return pd.DataFrame(myDict).transpose()[['value','expression','parameters','knobs']].sort_index()
 
 def independentVariablesDF(mad):
+    '''
+    Extract the pandas DF with the independent variables of the MAD-X handle.
+    
+    Args:
+        mad: The handle to MAD-X
+    
+    Returns:
+        The pandas DF of the independent variables. The columns of the DF correspond to the 
+        - the numerical value of the independent variable (value)
+        - a boolean value to know it the variable is constant or not (constant)
+        - a boolean value to know it the variable is a knob or not (knob)
+          These are independent variables that control numerical values of the dependent variables (knobs).
+    
+    See madxp/examples/variablesExamples/000_run.py
+    '''
+
     depDF=dependentVariablesDF(mad)
     aux=list(depDF['knobs'].values)
     aux=list(itertools.chain.from_iterable(aux))
@@ -127,6 +195,19 @@ def independentVariablesDF(mad):
     return pd.DataFrame(myDict).transpose()[['value','constant','knob']].sort_index()
 
 def _knobsFromParameters(parameters, indepDF, depDF):
+    '''
+    Extract the list of knobs from a list of parameters.
+    
+    Args:
+        parameters: list of parameters
+        indepDF: independent variable DF
+        depDF: dependent variable DF
+
+    Returns:
+        The list of knobs corresponding to the list of parameters.
+    
+    See madxp/examples/variablesExamples/000_run.py
+    '''
     myKnobs=[]
     for i in parameters:
         if i in indepDF.index:
@@ -141,6 +222,18 @@ def _knobsFromParameters(parameters, indepDF, depDF):
     return list(itertools.chain.from_iterable(myKnobs))
 
 def sequenceDF(mad,sequenceName):
+    '''
+    Extract a pandas DF of the list of the elements and all their attributes for a given sequence.
+    
+    Args:
+        mad: the MAD-X handle
+        sequenceName: the sequence name
+
+    Returns:
+        The list of knobs corresponding to the list of parameters.
+    
+    See madxp/examples/variablesExamples/000_run.py
+    '''
     myList=[]
     sequences=mad.sequence
     mySequence=sequences[sequenceName]
