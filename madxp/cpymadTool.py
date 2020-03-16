@@ -167,32 +167,30 @@ def independentVariablesDF(mad):
         The pandas DF of the independent variables. The columns of the DF correspond to the 
         - the numerical value of the independent variable (value)
         - a boolean value to know it the variable is constant or not (constant)
-        - a boolean value to know it the variable is a knob or not (knob)
-          These are independent variables that control numerical values of the dependent variables (knobs).
-    
+   
     See madxp/examples/variablesExamples/000_run.py
     '''
 
     depDF=dependentVariablesDF(mad)
     aux=list(depDF['knobs'].values)
     aux=list(itertools.chain.from_iterable(aux))
-    fundamentalSet=set(np.unique(aux))
+    #fundamentalSet=set(np.unique(aux))
     independentVariableSet=set(mad.globals)-set(depDF.index)
     myDict={}
     for i in independentVariableSet:
         myDict[i]={}
         if mad._libmadx.get_var_type(i)==0:
             myDict[i]['constant']=True
-            myDict[i]['knob']=False
+            # myDict[i]['knob']=False
         else:
             myDict[i]['constant']=False
-            if i in fundamentalSet:
-                myDict[i]['knob']=True
-            else:
-                myDict[i]['knob']=False
+            # if i in fundamentalSet:
+            #    myDict[i]['knob']=True
+            # else:
+            #    myDict[i]['knob']=False
         myDict[i]['value']=mad.globals[i]
     
-    return pd.DataFrame(myDict).transpose()[['value','constant','knob']].sort_index()
+    return pd.DataFrame(myDict).transpose()[['value','constant']].sort_index()
 
 def _knobsFromParameters(parameters, indepDF, depDF):
     '''
