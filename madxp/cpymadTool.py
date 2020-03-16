@@ -317,7 +317,7 @@ def knobsDF(myDF):
     myDict={}
     for i in aux:
         myDict[i]={}
-        filterDF=filterKnobDepedences(i, myDF)
+        filterDF=knobDF(i, myDF)
         myDict[i]['multeplicity']=len(filterDF)
         myDict[i]['dependences']=list(filterDF.indexDF)
     return pd.DataFrame(myDict).transpose().sort_values('multeplicity', ascending=False)
