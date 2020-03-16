@@ -73,13 +73,13 @@ mt.sequenceDF(mad, 'my_sequence')
 # - you can see 'myk1' has knob
 
 # %% One can easily check the knobs of a given sequence
-mt.knobsList(mt.sequenceDF(mad, 'my_sequence'))
+mt.knobsDF(mt.sequenceDF(mad, 'my_sequence'))
 # NB: one can do also 
-# mt.knobsList(myVariableDict['dependentVariableDF'])
+# mt.knobsDF(myVariableDict['dependentVariableDF'])
 # %% One can easily check the element of a sequence related to a specific knobs
-mt.filterKnobDepedences('myk1',mt.sequenceDF(mad, 'my_sequence'))
+mt.knobDF('myk1',mt.sequenceDF(mad, 'my_sequence'))
 # NB: one can do also 
-# mt.filterKnobDepedences('f', myVariableDict['dependentVariableDF'])
+# mt.knobDF('f', myVariableDict['dependentVariableDF'])
 # %% Let us use the sequence
 mad.input('use, sequence=my_sequence;')
 # %% then we have 

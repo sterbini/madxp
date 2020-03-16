@@ -296,7 +296,7 @@ def sequenceDF(mad,sequenceName):
     lastColumns.sort()
     return myDF[firstColumns+lastColumns]
 
-def knobsList(myDF):
+def knobsDF(myDF):
     '''
     Extract the knob list of a pandas DF (it assumes that DF has a column called "knobs")
     and contanting lists
@@ -305,7 +305,7 @@ def knobsList(myDF):
         myDF: a pandas DF (it assumes that DF has a column called "knobs").
 
     Returns:
-        The list of knobs.
+        A data frame of knobs.
     
     See madxp/examples/variablesExamples/000_run.py
 
@@ -313,9 +313,17 @@ def knobsList(myDF):
     import itertools
     import numpy as np
     aux= list(myDF['knobs'].values)
-    return list(np.unique(list(itertools.chain.from_iterable(aux))))
+    aux= list(np.unique(list(itertools.chain.from_iterable(aux))))
+    myDict={}
+    for i in aux:
+        myDict[i]={}
+        filterDF=mt.filterKnobDepedences(i, myDF)
+        myDict[i]['multeplicity']=len(filterDF)
+        myDict[i]['dependences']=list(filterDF.indexDF)
+    return pd.DataFrame(myDict).transpose().sort_values('multeplicity', ascending=False)
 
-def filterKnobDepedences(myKnob,myDF):
+
+def knobDF(myKnob,myDF):
     '''
     Filter the pandas DF, 'myDF', returning only the rows that depend on the selected knob, 'myKnob'.
     
