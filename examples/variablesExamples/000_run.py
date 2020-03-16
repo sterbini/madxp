@@ -87,6 +87,7 @@ display(mt.sequencesDF(mad))
 display(mt.beamsDF(mad))
 # NB: now the sequence is expanded and the beamDF method returns a non-empty DF.
 # %%
+# To ease the visualization of a given element you can run
 mt.showElement('q1', mt.sequenceDF(mad, 'my_sequence'))
 # %%
 myVariableDict=mt.variablesDict(mad)
@@ -99,4 +100,4 @@ mad.input('twiss, betx=1,bety=1;')
 list(mad.table)
 # %% Then we can import the table by
 mt.tableDF(mad.table.twiss)
-
+# %%
