@@ -87,6 +87,8 @@ display(mt.sequencesDF(mad))
 display(mt.beamsDF(mad))
 # NB: now the sequence is expanded and the beamDF method returns a non-empty DF.
 # %%
+mt.showElement('my_quad:1',mt.sequenceDF(mad))
+# %%
 myVariableDict=mt.variablesDict(mad)
 myVariableDict['independentVariableDF']
 # NB: now the 'myk1' appears in the pandas DF

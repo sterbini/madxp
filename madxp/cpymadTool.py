@@ -347,3 +347,19 @@ def tableDF(table):
     myDF=myDF.set_index('name')
     myDF.index.name=''
     return myDF
+
+def showElement(elementName, sequenceDF):
+    '''
+    Print and return the row of the 'sequenceDF' corresponding to a given 'elementName'.
+    
+    Args:
+        elementName: the name
+
+    Returns:
+        A single-row DF corresponding to the 'elementName' of 'sequenceDF'.
+    
+    See madxp/examples/variablesExamples/000_run.py
+    '''
+    aux=sequenceDF.loc[[elementName]].dropna(axis=1)
+    print(aux.transpose().to_string())
+    return(aux)
