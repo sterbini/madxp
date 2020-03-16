@@ -108,7 +108,41 @@ def _extractParameters(mystring):
             'tgauss']))
         return myList 
 
-def dependentVariablesDF(mad):
+def variablesDict(mad):
+    '''
+
+    Extract the dictionary of the variables and constant pandas DF of the MAD-X global workspace.
+
+    Args:
+        mad: The MAD-X handle.
+    
+    Returns:
+        The a dictionary containing:
+        - constantDF: the pandas DF with the constants
+        - independentVariableDF: the pandas DF with the independent variables
+        - dependentVariableDF: the pandas DF with the dependent variables
+    All the three DFs have a columns 'value' with the numerical values of the costants/variables.
+    The dependentVariableDF, in addition to 'value' has the following columns:
+        - 'expression': the string corrensponding to the MAD-X expression
+        - 'parameters': the list of parameters used in the expression
+        - 'knobs': the list of the independent variables that control 
+          the dependent variables. Note tha the parameters can be constants and/or dependent variables,
+          whereas the 'knobs' are only independent variables.
+    '''
+    myDict={}
+    aux=_independentVariablesDF(mad)
+    import numpy as np
+    independentVariablesDF=aux[np.logical_not(aux['constant'])].copy()
+    del independentVariablesDF['constant']
+    constantDF=aux[aux['constant']].copy()
+    del constantDF['constant']
+    myDict['constantDF']=constantDF
+    myDict['independentVariableDF']=independentVariablesDF
+    myDict['dependentVariableDF']=_dependentVariablesDF(mad)
+    
+    return myDict
+
+def _dependentVariablesDF(mad):
     '''
     Extract the pandas DF with the dependent variables of the MAD-X handle.
     
@@ -156,7 +190,7 @@ def dependentVariablesDF(mad):
     
     return pd.DataFrame(myDict).transpose()[['value','expression','parameters','knobs']].sort_index()
 
-def independentVariablesDF(mad):
+def _independentVariablesDF(mad):
     '''
     Extract the pandas DF with the independent variables of the MAD-X handle.
     
@@ -171,7 +205,7 @@ def independentVariablesDF(mad):
     See madxp/examples/variablesExamples/000_run.py
     '''
 
-    depDF=dependentVariablesDF(mad)
+    depDF=_dependentVariablesDF(mad)
     aux=list(depDF['knobs'].values)
     aux=list(itertools.chain.from_iterable(aux))
     #fundamentalSet=set(np.unique(aux))
@@ -235,8 +269,8 @@ def sequenceDF(mad,sequenceName):
     myList=[]
     sequences=mad.sequence
     mySequence=sequences[sequenceName]
-    indepDF=independentVariablesDF(mad)
-    depDF=dependentVariablesDF(mad)
+    indepDF=_independentVariablesDF(mad)
+    depDF=_dependentVariablesDF(mad)
 
     for myIndex, element in enumerate(mySequence.elements):
         aux=mad._libmadx.get_element(sequenceName,myIndex)
@@ -262,7 +296,53 @@ def sequenceDF(mad,sequenceName):
     lastColumns.sort()
     return myDF[firstColumns+lastColumns]
 
+def knobsList(myDF):
+    '''
+    Extract the knob list of a pandas DF (it assumes that DF has a column called "knobs")
+    and contanting lists
+    
+    Args:
+        myDF: a pandas DF (it assumes that DF has a column called "knobs").
+
+    Returns:
+        The list of knobs.
+    
+    See madxp/examples/variablesExamples/000_run.py
+
+    '''
+    import itertools
+    import numpy as np
+    aux= list(myDF['knobs'].values)
+    return list(np.unique(list(itertools.chain.from_iterable(aux))))
+
+def filterKnobDepedences(myKnob,myDF):
+    '''
+    Filter the pandas DF, 'myDF', returning only the rows that depend on the selected knob, 'myKnob'.
+    
+    Args:
+        myKnob: the name of the knob to filter.
+        myDF: a pandas DF (it assumes that DF has a column called "knobs").
+
+    Returns:
+        The filter pandas DF showing the rows that depend on the selected knob, 'myKnob'.
+    
+    See madxp/examples/variablesExamples/000_run.py
+
+    '''
+    return myDF[myDF['knobs'].apply(lambda x: myKnob in x)]
+
 def tableDF(table):
+    '''
+    Extract the pandas DF of a MAD-X table.
+    
+    Args:
+        table: the MAD-X table handle 
+
+    Returns:
+        The pandas DF of a MAD-X table.
+    
+    See madxp/examples/variablesExamples/000_run.py
+    '''
     myDF=pd.DataFrame(dict(table))
     myDF=myDF.set_index('name')
     myDF.index.name=''

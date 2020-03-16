@@ -34,9 +34,25 @@ mt.sequencesDF(mad)
 # %% Extracting the DF of the beams attached to the sequences
 mt.beamsDF(mad)
 # The beams DF is empty
-# %% The dependent variables DF
-depDF=mt.dependentVariablesDF(mad)
-depDF
+# %% The constant and variables DFs
+
+myVariableDict=mt.variablesDict(mad)
+myVariableDict.keys()
+
+# %%
+display(myVariableDict['constantDF'])
+
+# %%
+display(myVariableDict['independentVariableDF'])
+
+# NB: 
+# - the variable 'myk1' (in the definition of the 'my_quad' element) 
+# is not present in the list of the independent variable 
+# (since the sequence is not used) 
+# - 'i' appears as a constantI think
+# %%
+display(myVariableDict['dependentVariableDF'])
+
 # the dependent variable DF contains the numerical values, the expression, 
 # the parameters and the knobs for each dependet variables. 
 # The knobs of a given dependent variables, myVariable, are a set of 
@@ -49,21 +65,20 @@ depDF
 # - despite 'h' is assigned via a deferred expression, it is not a dependent variables.
 # - 'g' is not explicitly declared, then is an independent variable (with 0 values).
 # - 'i' is declared as a constant, therefore is an independent variables.
-# %% The independent variables DF
-indepDF=mt.independentVariablesDF(mad)
-indepDF
-# As a complement to the dependent variable DF, there is an independent variable DF
-# %% Constant variables
-indepDF[indepDF['constant']]
 
-# %%
 
+# %% Now we can import the sequence DF 
+# ('sequenceDF' has not to be confused 'sequencesDF')
 mt.sequenceDF(mad, 'my_sequence')
-
+# NB:
+# - for each element you have the 'parameters' and the 'knobs' columns.
+# - you can see 'myk1' has knob
 
 # %%
-import numpy as np
-indepDF[np.logical_not(indepDF['constant'])]
+listOfKnobs(mt.sequenceDF(mad, 'my_sequence'))
+
+# %%
+selectKnobsDepedences('myk1',mt.sequenceDF(mad, 'my_sequence'))
 
 # %%
 mad.input('use, sequence=my_sequence;')
@@ -71,15 +86,10 @@ mad.input('use, sequence=my_sequence;')
 mt.beamsDF(mad)
 
 # %%
-indepDF=mt.independentVariablesDF(mad)
-indepDF
+myVariableDict=mt.variablesDict(mad)
+myVariableDict['independentVariableDF']
 # %%
 mad.input('twiss, betx=1,bety=1;')
 # %%
-indepDF=mt.independentVariablesDF(mad)
-indepDF
-
-# %%
-mt.sequenceDF(mad, 'my_sequence')
-
-# %%
+myVariableDict=mt.variablesDict(mad)
+myVariableDict['independentVariableDF']
