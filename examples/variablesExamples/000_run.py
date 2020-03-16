@@ -1,4 +1,6 @@
 # %%
+# To install the package 
+# pip install --upgrade --user git+https://github.com/sterbini/madxp.git
 from madxp import cpymadTool as mt
 from cpymad.madx import Madx
 mad=Madx()
