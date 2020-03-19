@@ -16,11 +16,11 @@ h:=3;
 const i=2;
 
 ! element definition
-my_quad: quadrupole, l=1, k1:=myk1+h+b;
+my_quad: quadrupole, l=1, k1:=(myk1+h+b)/1000;
 
 ! sequence definition
-my_sequence: sequence,l=10;
-q1: my_quad, at=2;
+my_sequence: sequence,l=10, refer=exit;
+q1: my_quad, at=3;
 endsequence;
 
 ! beam defintion
@@ -100,4 +100,8 @@ mad.input('twiss, betx=1,bety=1;')
 list(mad.table)
 # %% Then we can import the table by
 mt.tableDF(mad.table.twiss)
+# %% Interpolation 
+
+mt.tableInterpolationDF(myS_List=[2.8], myTable=mt.tableDF(mad.table.twiss))
+
 # %%

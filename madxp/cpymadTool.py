@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 import cpymad
+from cpymad.madx import Madx
 import itertools
+import gc
 
 def sequencesDF(mad):
     '''
@@ -371,3 +373,164 @@ def showElement(elementName, sequenceDF):
     aux=sequenceDF.loc[[elementName]].dropna(axis=1)
     print(aux.transpose().to_string())
     return(aux)
+
+
+# %% Interpolation 
+
+def tableInterpolationDF(myS_List, myTable):
+    '''
+    Thanks to H. Bartosik for sharing his code and for the discussion.
+    This funcntion will interpolate in a list of s-positions the MAD-X table passed as argument.
+    This table has to be a full MAD-X twiss table (e.g., 'e1', 'fint',... columns have to be present).
+    For each element in myS_List there will be a twiss-command (of a short sequence). 
+    This can be time consuming for long list. It this case please look to MAD-X interpolate command at
+    http://mad.web.cern.ch/mad/webguide/manual.html#Ch19.S10.
+
+    The rationale is to make a new instance of MAD-X in the body of the funciton and to build-and-twiss mini sequences.
+    The twiss will be performed with given initial values http://mad.web.cern.ch/mad/webguide/manual.html#Ch19.S10.
+
+    Args:
+        myS_List: list of s-position to be evaluated
+        myTable: a MAD-X twiss table.
+
+    Returns:
+        The pandas DF with the interpolated values. 
+    
+    See madxp/examples/variablesExamples/000_run.py
+
+    '''
+    # myS_List=[2.8], myTable=mt.tableDF(mad.table.twiss)
+    myList=[]
+    madx=Madx(stdout=False)
+
+    for myS in myS_List:
+        try:
+            startCondition=myTable[myTable['s']<myS].index[-1]
+        except:
+            startCondition=myTable.index[0]
+        try:
+            myElement=myTable[myTable['s']>=myS].index[0]
+        except:
+            myElement=myTable.index[-1]
+        
+        myStruct={}
+        myElementRow= myTable.loc[myElement]
+        startConditionRow= myTable.loc[startCondition]
+        if myElementRow.s==myS:
+            interpolation=pd.DataFrame(myElementRow).transpose()
+        else:
+            assert myElementRow.l>0 # The elements need to be thick
+            if myElementRow.keyword in ['quadrupole',
+                                        'drift', 
+                                        'sextupole', 
+                                        'octupole', 
+                                        'placeholder',
+                                        'hmonitor',
+                                        'vmonitor',
+                                        'monitor',
+                                        ]:
+                myString=f'''
+                    my_special_element: quadrupole,
+                    l= {myS-startConditionRow.s},
+                    k1={myElementRow.k1l/myElementRow.l}, 
+                    k1s={myElementRow.k1sl/myElementRow.l},
+                    tilt={myElementRow.tilt};
+                '''
+            elif myElementRow.keyword in ['sbend']:
+                # 
+                myString=f'''
+                    my_special_element: sbend,
+                    l={myS-startConditionRow.s},
+                    angle={myElementRow.angle/myElementRow.l*{myS-startConditionRow.s}},
+                    tilt={myElementRow.tilt},
+                    k1={myElementRow.k1l/myElementRow.l},
+                    e1={myElementRow.e1},
+                    fint={myElementRow.fint},
+                    fintx=0,
+                    hgap={myElementRow.hgap},
+                    k1s={myElementRow.k1sl/myElementRow.l},
+                    h1={myElementRow.h1},
+                    h2=0,
+                    kill_exi_fringe=0;
+                '''
+            elif myElementRow.keyword in ['rbend']:
+                myString=f'''
+                    option, rbarc=false;
+                    my_special_element: rbend,
+                    l= {myS-startConditionRow.s},
+                    angle={myElementRow.angle/myElementRow.l*{myS-startConditionRow.s}},
+                    k1={myElementRow.k1l/myElementRow.l},
+                    e1={myElementRow.e1},
+                    fint={myElementRow.fint},
+                    fintx=0,
+                    hgap={myElementRow.hgap},
+                    k1s={myElementRow.k1sl/myElementRow.l},
+                    h1={myElementRow.h1},
+                    h2=0,
+                    kill_exi_fringe=0;
+                '''
+            elif myElementRow.keyword in ['matrix', 
+                                          'collimator',
+                                          'elseparator',
+                                          'hacdipole',
+                                          'vacdipole',
+                                          'twcavity',
+                                          'tkicker',
+                                          'hkicker',
+                                          'vkicker',
+                                          'kicker',
+                                          'solenoid'
+                                          'rfcavity']:
+                print(f'The element keyword {myElementRow.keyword} has not been implemented.')
+                print(f'Consider to remove the interpolating position at {myS} m.')
+                return
+
+            myString =  myString + f''' 
+                my_special_sequence: sequence, l={myS-startConditionRow.s}, refer=entry;
+                at_{myS:}:my_special_element, at=0;
+                endsequence;
+                
+                beam, sequence=my_special_sequence; ! we assume normalized elements
+                use, sequence=my_special_sequence;
+                
+                twiss, 
+                betx  = {startConditionRow.betx}, 
+                alfx  = {startConditionRow.alfx}, 
+                mux   = {startConditionRow.mux}, 
+                bety  = {startConditionRow.bety}, 
+                alfy  = {startConditionRow.alfy},
+                muy   = {startConditionRow.muy}, 
+                dx    = {startConditionRow.dx},
+                dpx   = {startConditionRow.dpx},
+                dy    = {startConditionRow.dy},
+                dpy   = {startConditionRow.dpy},
+                x     = {startConditionRow.x},
+                px    = {startConditionRow.px},
+                y     = {startConditionRow.y},
+                py    = {startConditionRow.py},
+                t     = {startConditionRow.t},
+                pt    = {startConditionRow.pt},
+                wx    = {startConditionRow.wx},
+                phix  = {startConditionRow.phix},
+                dmux  = {startConditionRow.dmux},
+                wy    = {startConditionRow.wy},
+                phiy  = {startConditionRow.phiy},
+                dmuy  = {startConditionRow.dmuy},
+                ddx   = {startConditionRow.ddx},
+                ddy   = {startConditionRow.ddy},
+                ddpx  = {startConditionRow.ddpx},
+                ddpy  = {startConditionRow.ddpy},
+                r11   = {startConditionRow.r11},
+                r12   = {startConditionRow.r12},
+                r21   = {startConditionRow.r21},
+                r22   = {startConditionRow.r22},
+                table=special_twiss;
+                '''
+            madx.input(myString)
+            madx.input('delete, sequence=my_special_sequence;my_special_element=0;')
+            interpolation=tableDF(madx.table.special_twiss).iloc[[1]]
+            interpolation.keyword='interpolation'
+            interpolation.s=myS
+        myList.append(interpolation)
+        gc.collect()
+    return pd.concat(myList)
