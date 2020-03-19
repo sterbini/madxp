@@ -53,3 +53,5 @@ examples/run3/dbrun3
 examples/run3/log.madx
 examples/run3/output.pkl
 examples/run3/stdout.madx
+examples/macros_bb/log.madx
+examples/macros_bb/stdout.madx
