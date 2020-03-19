@@ -112,7 +112,7 @@ def df2madx(myDF):
         myString=myString+ '!## ' +block[0]+ '\n' + block[1]['Code section']
     return myString
 
-def df2run(myDF, pythonData=None, command_log_file='log.madx', stdout_file='stdout.madx', verbose=False):
+def df2run(madx, myDF, pythonData=None, verbose=False):
     '''
         It runs the MADX dataframe using the MADX extended syntax.
         myDF: the MADX DF to run.
@@ -120,18 +120,6 @@ def df2run(myDF, pythonData=None, command_log_file='log.madx', stdout_file='stdo
         stdout_file: the filename of the file to redirect the stdout. Use the None variable not to log.
         verbose: boolean flag to have verbose output during the execution.
     '''
-    if command_log_file==None:
-        if stdout_file==None:
-            madx = Madx()
-        else:
-            with open(stdout_file, 'w') as f:
-                madx = Madx(stdout=f)
-    else:
-        if stdout_file==None:
-            madx = Madx(command_log=command_log_file)
-        else:
-            with open(stdout_file, 'w') as f:
-                madx = Madx(stdout=f,command_log=command_log_file)
     myGlobals=[]
     for section in myDF.iterrows():
         print(section[0])
@@ -174,7 +162,19 @@ def madxp(inputFile, pythonData=None, outputDF='output.pkl', command_log_file='l
         stdout_file: the filename of the file to redirect the stdout. Use the None variable not to log.
         verbose: boolean flag to have verbose output during the execution.
     '''
-    aux=df2run(madx2df(inputFile), pythonData=pythonData, command_log_file=command_log_file, stdout_file=stdout_file, verbose=verbose)
+    if command_log_file==None:
+        if stdout_file==None:
+            madx = Madx()
+        else:
+            with open(stdout_file, 'w') as f:
+                madx = Madx(stdout=f)
+    else:
+        if stdout_file==None:
+            madx = Madx(command_log=command_log_file)
+        else:
+            with open(stdout_file, 'w') as f:
+                madx = Madx(stdout=f,command_log=command_log_file)
+    aux=df2run(madx, madx2df(inputFile), pythonData=pythonData, verbose=verbose)
     if outputDF!=None:
-        aux.to_pickle(outputDF);
+        aux.to_pickle(outputDF)
         print('Profiling DF saved.')

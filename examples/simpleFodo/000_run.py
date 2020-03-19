@@ -1,5 +1,5 @@
 # %% Run it
-import madxp;
+import madxp
 try:
     madxp.madxp('input.madx')
 except FileNotFoundError:
