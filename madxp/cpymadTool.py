@@ -380,14 +380,15 @@ def showElement(elementName, sequenceDF):
 def tableInterpolationDF(myS_List, myTable):
     '''
     Thanks to H. Bartosik for sharing his code and for the discussion.
-    This funcntion will interpolate in a list of s-positions the MAD-X table passed as argument.
+    
+    This function will interpolate in a list of s-positions the MAD-X table passed as argument.
     This table has to be a full MAD-X twiss table (e.g., 'e1', 'fint',... columns have to be present).
-    For each element in myS_List there will be a twiss-command (of a short sequence). 
-    This can be time consuming for long list. It this case please look to MAD-X interpolate command at
+    For each element in myS_List there will be a twiss-command of a short sequence. 
+    This can be time consuming for long lists. It this case please look to MAD-X interpolate command at
     http://mad.web.cern.ch/mad/webguide/manual.html#Ch19.S10.
 
     The rationale is to make a new instance of MAD-X in the body of the funciton and to build-and-twiss mini sequences.
-    The twiss will be performed with given initial values http://mad.web.cern.ch/mad/webguide/manual.html#Ch19.S10.
+    The twiss will be performed with given initial values http://mad.web.cern.ch/mad/webguide/manual.html#Ch19.S3.
 
     Args:
         myS_List: list of s-position to be evaluated

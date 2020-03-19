@@ -101,7 +101,17 @@ list(mad.table)
 # %% Then we can import the table by
 mt.tableDF(mad.table.twiss)
 # %% Interpolation 
+import numpy as np
+mt.tableInterpolationDF(myS_List=np.linspace(2,3,11), myTable=mt.tableDF(mad.table.twiss))
 
-mt.tableInterpolationDF(myS_List=[2.8], myTable=mt.tableDF(mad.table.twiss))
+# %%
+mad.input('''
+select, flag=interpolate, clear;
+select, flag=interpolate, sequence=my_sequence,class=quadrupole, slice=10;
+! more on 
+twiss, betx=1,bety=1,table='with_interpolation';
+''')
+# %%
+mt.tableDF(mad.table.with_interpolation)
 
 # %%
