@@ -1,7 +1,10 @@
-# %% Run it
+# %% Run it basically
+pythonData={}
+pythonData={'quadrupole_length':6}
+
 import madxp
 try:
-    madxp.madxp('input.madx')
+    madxp.madxp('input.madx', pythonData=pythonData)
 except FileNotFoundError:
     import os
     os.chdir('/afs/cern.ch/work/s/sterbini/madxp/examples/simpleFodo')

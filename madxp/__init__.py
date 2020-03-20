@@ -127,7 +127,6 @@ def df2run(madx, myDF, pythonData=None, verbose=False):
         print(section[0])
         start_time = time.time()
         codeSubSections=section[1]['Code subsections']
-        pythonDictionary={}
         with madx.batch():
             myCheck=[list(code.keys())[0] for code in codeSubSections]
             if verbose: print(codeSubSections)
@@ -149,7 +148,7 @@ def df2run(madx, myDF, pythonData=None, verbose=False):
         myDict['Code subsections']=section[1]['Code subsections']
         myDict['Code section']=section[1]['Code section']        
         myDict['execution time [s]']=execution_time_s
-        myDict['pythonDictionary']=pythonDictionary
+        myDict['pythonData']=pythonData
         myDict['independentVariableDF']=myVariableDict['independentVariableDF']
         myDict['dependentVariableDF']=myVariableDict['dependentVariableDF']
         myDict['constantDF']=myVariableDict['constantDF']
