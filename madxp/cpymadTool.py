@@ -190,8 +190,11 @@ def _dependentVariablesDF(mad):
         myDict[i]['expression']=mad._libmadx.get_var(i)
         myDict[i]['value']=mad.globals[i]
     
-    return pd.DataFrame(myDict).transpose()[['value','expression','parameters','knobs']].sort_index()
-
+    if len(myDict)>0:
+        return pd.DataFrame(myDict).transpose()[['value','expression','parameters','knobs']].sort_index()
+    else:
+        return pd.DataFrame()
+        
 def _independentVariablesDF(mad):
     '''
     Extract the pandas DF with the independent variables of the MAD-X handle.
