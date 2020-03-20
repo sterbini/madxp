@@ -8,6 +8,8 @@ import pandas as pd
 import time
 from cpymad.madx import Madx
 import sys
+from madxp import cpymadTool as mt
+
 
 def madx2df(inputFile):
     '''
@@ -143,11 +145,17 @@ def df2run(madx, myDF, pythonData=None, verbose=False):
                     assert(0)
         execution_time_s=time.time()-start_time
         myDict={}
-        myDict=dict(madx.globals)
+        myVariableDict=mt.variablesDict(madx)
+        myDict['Code subsections']=section[1]['Code subsections']
+        myDict['Code section']=section[1]['Code section']        
         myDict['execution time [s]']=execution_time_s
         myDict['pythonDictionary']=pythonDictionary
-        myDict['Code subsections']=section[1]['Code subsections']
-        myDict['Code section']=section[1]['Code section']
+        myDict['independentVariableDF']=myVariableDict['independentVariableDF']
+        myDict['dependentVariableDF']=myVariableDict['dependentVariableDF']
+        myDict['constantDF']=myVariableDict['constantDF']
+        myDict['sequencesDF']=mt.sequencesDF(madx)
+        myDict['beamsDF']=mt.beamsDF(madx)
+        myDict['tablesList']=list(madx.table)
         myGlobals.append(myDict)
     profileDF=pd.DataFrame(myGlobals, index=myDF.index)
     return profileDF

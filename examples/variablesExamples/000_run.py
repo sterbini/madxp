@@ -40,10 +40,10 @@ myVariableDict=mt.variablesDict(mad)
 myVariableDict.keys()
 # There are three DFs representing MAD-X global workspace
 # %%
-display(myVariableDict['constantDF'])
+myVariableDict['constantDF']
 # NB: in addition to the MAD-X predefined constant, also 'i' (user defined constant) is present.
 # %%
-display(myVariableDict['independentVariableDF'])
+myVariableDict['independentVariableDF']
 
 # NB: 
 # - 'g' is not explicitly declared, then is an independent variable (with 0 values)
@@ -53,7 +53,7 @@ display(myVariableDict['independentVariableDF'])
 # is not present in the list of the independent variable (since the sequence is not used) 
 # - the 'none' and 'twiss_tol' are MAD-X defined independent variables.
 # %%
-display(myVariableDict['dependentVariableDF'])
+myVariableDict['dependentVariableDF']
 
 # the dependent variable DF contains the numerical values, the expression, 
 # the parameters and the knobs for each dependent variables. 
@@ -83,8 +83,9 @@ mt.knobDF('myk1',mt.sequenceDF(mad, 'my_sequence'))
 # %% Let us use the sequence
 mad.input('use, sequence=my_sequence;')
 # %% then we have 
-display(mt.sequencesDF(mad))
-display(mt.beamsDF(mad))
+mt.sequencesDF(mad)
+# %%
+mt.beamsDF(mad)
 # NB: now the sequence is expanded and the beamDF method returns a non-empty DF.
 # %%
 # To ease the visualization of a given element you can run
