@@ -169,7 +169,7 @@ def _dependentVariablesDF(mad):
             myDict[i]['parameters']=list(np.unique(aux))
     
     myhash=hash(str(myDict))
-    for n in range(100):
+    while True:
         for i in myDict:
             aux=[]
             for j in myDict[i]['parameters']:
@@ -194,7 +194,7 @@ def _dependentVariablesDF(mad):
         return pd.DataFrame(myDict).transpose()[['value','expression','parameters','knobs']].sort_index()
     else:
         return pd.DataFrame()
-        
+
 def _independentVariablesDF(mad):
     '''
     Extract the pandas DF with the independent variables of the MAD-X handle.
@@ -211,8 +211,9 @@ def _independentVariablesDF(mad):
     '''
 
     depDF=_dependentVariablesDF(mad)
-    aux=list(depDF['knobs'].values)
-    aux=list(itertools.chain.from_iterable(aux))
+    #if len(depDF)>0:
+    #    aux=list(depDF['knobs'].values)
+    #    aux=list(itertools.chain.from_iterable(aux))
     #fundamentalSet=set(np.unique(aux))
     independentVariableSet=set(mad.globals)-set(depDF.index)
     myDict={}
@@ -277,7 +278,7 @@ def sequenceDF(mad,sequenceName):
     indepDF=_independentVariablesDF(mad)
     depDF=_dependentVariablesDF(mad)
 
-    for myIndex, element in enumerate(mySequence.elements):
+    for myIndex, _ in enumerate(mySequence.elements):
         aux=mad._libmadx.get_element(sequenceName,myIndex)
         myDict={}
         myDict['parameters']=[]
@@ -417,7 +418,6 @@ def tableInterpolationDF(myS_List, myTable):
         except:
             myElement=myTable.index[-1]
         
-        myStruct={}
         myElementRow= myTable.loc[myElement]
         startConditionRow= myTable.loc[startCondition]
         if myElementRow.s==myS:
