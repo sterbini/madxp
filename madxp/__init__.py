@@ -163,7 +163,7 @@ def madxp(inputFile, pythonData=None, outputDF='output.pkl', command_log_file='l
     '''
         It runs the MADX dataframe using the MADX extended syntax.
         inputFile:  the MADX input file.
-        outputDF:   the file to dump the output DF. The MADX variable and the pythonDictionary will be available for all 
+        outputDF:   the file to dump the output DF. The MADX variable and the pythonData will be available for all 
                     code sections.
         command_log_file: the filename of the logging file. Use the None variable not to log.
         stdout_file: the filename of the file to redirect the stdout. Use the None variable not to log.

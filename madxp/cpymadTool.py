@@ -358,8 +358,41 @@ def tableDF(table):
     See madxp/examples/variablesExamples/000_run.py
     '''
     myDF=pd.DataFrame(dict(table))
-    myDF=myDF.set_index('name')
+    myDF=myDF.set_index('name', drop=False)
     myDF.index.name=''
+    return myDF
+
+def twissDF(table):
+    '''
+    Extract the pandas DF of a MAD-X twiss table.
+    
+    Args:
+        table: the MAD-X table handle 
+
+    Returns:
+        The pandas DF of a MAD-X table.
+    
+    See madxp/examples/variablesExamples/000_run.py
+    '''
+    myDF=pd.DataFrame(dict(table))
+    myDF=myDF.set_index('name', drop=False)
+    myDF.index.name=''
+    return myDF
+
+def summDF(table):
+    '''
+    Extract the pandas DF of a MAD-X summary table.
+    
+    Args:
+        table: the MAD-X table handle 
+
+    Returns:
+        The pandas DF of a MAD-X table.
+    
+    See madxp/examples/variablesExamples/000_run.py
+    '''
+    myDF=pd.DataFrame(dict(table))
+    myDF.index=[table._name]
     return myDF
 
 def showElement(elementName, sequenceDF):
@@ -538,3 +571,32 @@ def tableInterpolationDF(myS_List, myTable):
         myList.append(interpolation)
         gc.collect()
     return pd.concat(myList)
+
+def pythonData2mad(mad, pythonData, verbose=False):
+    '''
+    It assigns a dictionary to a MAD-X handle.
+    '''
+    for i in pythonData:
+        if i[0]!='_': 
+            if isinstance(pythonData[i],float) or isinstance(pythonData[i],int):
+                mad.input(f'{i}={pythonData[i]};')
+            else:
+                if verbose:
+                    print(f'{i} was not assigned to the MAD-X instance.')
+        else:
+            if verbose:
+                print(f'{i} was not assigned to the MAD-X instance.')
+
+
+def mad2pythonData(mad, pythonData, verbose=False):
+    '''
+    It assigns the variables present in pythonData from the values of the
+    MAD-X workspace.
+    '''
+    for i in pythonData:
+        try:
+            a=mad.globals[i]
+            pythonData[i]=a
+        except:
+            if verbose:
+                print(f'{i} not found in MAD-X instance.')
