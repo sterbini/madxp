@@ -148,13 +148,13 @@ def df2run(madx, myDF, pythonData=None, verbose=False):
         myDict['Code subsections']=section[1]['Code subsections']
         myDict['Code section']=section[1]['Code section']        
         myDict['execution time [s]']=execution_time_s
-        myDict['pythonData']=pythonData
-        myDict['independentVariableDF']=myVariableDict['independentVariableDF']
-        myDict['dependentVariableDF']=myVariableDict['dependentVariableDF']
-        myDict['constantDF']=myVariableDict['constantDF']
-        myDict['sequencesDF']=mt.sequences_df(madx)
-        myDict['beamsDF']=mt.beams_df(madx)
-        myDict['tablesList']=list(madx.table)
+        #myDict['pythonData']=pythonData
+        myDict['independent_variable_df']=myVariableDict['independent_variable_df']
+        myDict['dependent_variable_df']=myVariableDict['dependent_variable_df']
+        myDict['constant_df']=myVariableDict['constant_df']
+        myDict['sequences_df']=mt.sequences_df(madx)
+        myDict['beams_df']=mt.beams_df(madx)
+        myDict['tables_list']=list(madx.table)
         myGlobals.append(myDict)
     profileDF=pd.DataFrame(myGlobals, index=myDF.index)
     return profileDF

@@ -120,11 +120,11 @@ def variables_dict(mad):
     
     Returns:
         The a dictionary containing:
-        - constantDF: the pandas DF with the constants
-        - independentVariableDF: the pandas DF with the independent variables
-        - dependentVariableDF: the pandas DF with the dependent variables
+        - constant_df: the pandas DF with the constants
+        - independent_variable_df: the pandas DF with the independent variables
+        - dependent_variable_df: the pandas DF with the dependent variables
     All the three DFs have a columns 'value' with the numerical values of the costants/variables.
-    The dependentVariableDF, in addition to 'value' has the following columns:
+    The dependent_variable_df, in addition to 'value' has the following columns:
         - 'expression': the string corrensponding to the MAD-X expression
         - 'parameters': the list of parameters used in the expression
         - 'knobs': the list of the independent variables that control 
@@ -134,13 +134,13 @@ def variables_dict(mad):
     my_dict={}
     aux=_independent_variables_df(mad)
     import numpy as np
-    independentVariablesDF=aux[np.logical_not(aux['constant'])].copy()
-    del independentVariablesDF['constant']
-    constantDF=aux[aux['constant']].copy()
-    del constantDF['constant']
-    my_dict['constantDF']=constantDF
-    my_dict['independentVariableDF']=independentVariablesDF
-    my_dict['dependentVariableDF']=_dependent_variables_df(mad)
+    independent_variables_df=aux[np.logical_not(aux['constant'])].copy()
+    del independent_variables_df['constant']
+    constant_df=aux[aux['constant']].copy()
+    del constant_df['constant']
+    my_dict['constant_df']=constant_df
+    my_dict['independent_variable_df']=independent_variables_df
+    my_dict['dependent_variable_df']=_dependent_variables_df(mad)
     
     return my_dict
 
