@@ -144,7 +144,7 @@ def df2run(madx, myDF, pythonData=None, verbose=False):
                     assert(0)
         execution_time_s=time.time()-start_time
         myDict={}
-        myVariableDict=mt.variablesDict(madx)
+        myVariableDict=mt.variables_dict(madx)
         myDict['Code subsections']=section[1]['Code subsections']
         myDict['Code section']=section[1]['Code section']        
         myDict['execution time [s]']=execution_time_s
@@ -152,8 +152,8 @@ def df2run(madx, myDF, pythonData=None, verbose=False):
         myDict['independentVariableDF']=myVariableDict['independentVariableDF']
         myDict['dependentVariableDF']=myVariableDict['dependentVariableDF']
         myDict['constantDF']=myVariableDict['constantDF']
-        myDict['sequencesDF']=mt.sequencesDF(madx)
-        myDict['beamsDF']=mt.beamsDF(madx)
+        myDict['sequencesDF']=mt.sequences_df(madx)
+        myDict['beamsDF']=mt.beams_df(madx)
         myDict['tablesList']=list(madx.table)
         myGlobals.append(myDict)
     profileDF=pd.DataFrame(myGlobals, index=myDF.index)
