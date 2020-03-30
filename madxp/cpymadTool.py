@@ -5,7 +5,7 @@ from cpymad.madx import Madx
 import itertools
 import gc
 
-def sequencesDF(mad):
+def sequences_df(mad):
     '''
     Extract the pandas DF with the list of the sequences defined in the MAD-X handle.
     
@@ -18,21 +18,21 @@ def sequencesDF(mad):
     See madxp/examples/variablesExamples/000_run.py
 
     '''
-    sequences=mad.sequence
-    seqDict={}
+    sequences = mad.sequence
+    seq_dict = {}
     for ii in sequences:
-        seqDict[ii]={}
+        seq_dict[ii] = {}
         if sequences[ii].has_beam:
-            seqDict[ii]['beam']= True
+            seq_dict[ii]['beam'] = True
         else:
-            seqDict[ii]['beam']=False
+            seq_dict[ii]['beam'] = False
         if sequences[ii].is_expanded:
-            seqDict[ii]['expanded']=True
+            seq_dict[ii]['expanded'] = True
         else:
-            seqDict[ii]['expanded']=False
-    return pd.DataFrame(seqDict).transpose()
+            seq_dict[ii]['expanded'] = False
+    return pd.DataFrame(seq_dict).transpose()
 
-def beamsDF(mad):
+def beams_df(mad):
     '''
     Extract the pandas DF with the beams associated to the sequences defined in the MAD-X handle.
     
@@ -44,45 +44,45 @@ def beamsDF(mad):
 
     See madxp/examples/variablesExamples/000_run.py
     '''
-    dfList=[]
-    sequences=mad.sequence
+    df_list = []
+    sequences = mad.sequence
     for ii in sequences:
         try:
-            dfList.append(pd.DataFrame([dict(sequences[ii].beam)], index=[ii]))
+            df_list.append(pd.DataFrame([dict(sequences[ii].beam)], index=[ii]))
         except:
             print(f'The sequence {ii} has no beam attached.')
-    if len(dfList)>0:
-        return pd.concat(dfList)
+    if len(df_list) > 0:
+        return pd.concat(df_list)
     else:
         return pd.DataFrame()
 
-def _extractParameters(mystring):
+def _extract_parameters(my_string):
     '''
     Extract all the parameters of a MAD-X expression.
 
     Args:
-        mystring: The string of the MAD-X expression to parse.
+        my_string: The string of the MAD-X expression to parse.
     
     Returns:
         The list of the parameters present in the MAD-X expression.
 
     '''
-    if type(mystring)=='NoneType' or mystring==None or mystring=='None' or mystring=='[None]':
+    if type(my_string)=='NoneType' or my_string==None or my_string=='None' or my_string=='[None]':
         return []
     else:
         for i in [
         '*','-','/','+','(',')','[', ']',',','\'','None']:
-            mystring=mystring.replace(i,' ')
-        myList=mystring.split(' ')
-        myList=list(np.unique(myList))
-        if '' in myList:
-            myList.remove('')
-        if type(myList)=='NoneType':
-            myList=[]
-        for i in myList.copy():
+            my_string=my_string.replace(i,' ')
+        my_list=my_string.split(' ')
+        my_list=list(np.unique(my_list))
+        if '' in my_list:
+            my_list.remove('')
+        if type(my_list)=='NoneType':
+            my_list=[]
+        for i in my_list.copy():
             if i.isdigit() or i[0].isdigit():
-                myList.remove(i)
-        myList=list(set(myList)-
+                my_list.remove(i)
+        my_list=list(set(my_list)-
         set([
             'sqrt',
             'log',
@@ -108,9 +108,9 @@ def _extractParameters(mystring):
             'ranf',
             'gauss',
             'tgauss']))
-        return myList 
+        return my_list 
 
-def variablesDict(mad):
+def variables_dict(mad):
     '''
 
     Extract the dictionary of the variables and constant pandas DF of the MAD-X global workspace.
@@ -131,20 +131,20 @@ def variablesDict(mad):
           the dependent variables. Note tha the parameters can be constants and/or dependent variables,
           whereas the 'knobs' are only independent variables.
     '''
-    myDict={}
-    aux=_independentVariablesDF(mad)
+    my_dict={}
+    aux=_independent_variables_df(mad)
     import numpy as np
     independentVariablesDF=aux[np.logical_not(aux['constant'])].copy()
     del independentVariablesDF['constant']
     constantDF=aux[aux['constant']].copy()
     del constantDF['constant']
-    myDict['constantDF']=constantDF
-    myDict['independentVariableDF']=independentVariablesDF
-    myDict['dependentVariableDF']=_dependentVariablesDF(mad)
+    my_dict['constantDF']=constantDF
+    my_dict['independentVariableDF']=independentVariablesDF
+    my_dict['dependentVariableDF']=_dependent_variables_df(mad)
     
-    return myDict
+    return my_dict
 
-def _dependentVariablesDF(mad):
+def _dependent_variables_df(mad):
     '''
     Extract the pandas DF with the dependent variables of the MAD-X handle.
     
@@ -161,41 +161,41 @@ def _dependentVariablesDF(mad):
     
     See madxp/examples/variablesExamples/000_run.py
     '''
-    myDict={}
+    my_dict={}
     for i in list(mad.globals):
-        aux=_extractParameters(str(mad._libmadx.get_var(i)))
+        aux=_extract_parameters(str(mad._libmadx.get_var(i)))
         if aux!=[]:
-            myDict[i]={}
-            myDict[i]['parameters']=list(np.unique(aux))
+            my_dict[i]={}
+            my_dict[i]['parameters']=list(np.unique(aux))
     
-    myhash=hash(str(myDict))
+    myhash=hash(str(my_dict))
     while True:
-        for i in myDict:
+        for i in my_dict:
             aux=[]
-            for j in myDict[i]['parameters']:
+            for j in my_dict[i]['parameters']:
                 try:
-                    aux=aux+myDict[j]['parameters']
+                    aux=aux+my_dict[j]['parameters']
                 except:
                     aux=aux+[j]
-            myDict[i]['knobs']=list(np.unique(aux))
-        if myhash==hash(str(myDict)):
+            my_dict[i]['knobs']=list(np.unique(aux))
+        if myhash==hash(str(my_dict)):
             break
         else:
-            myhash=hash(str(myDict))
+            myhash=hash(str(my_dict))
     
-    for i in myDict:
-        for j in myDict[i]['knobs'].copy():
+    for i in my_dict:
+        for j in my_dict[i]['knobs'].copy():
             if mad._libmadx.get_var_type(j)==0:
-                myDict[i]['knobs'].remove(j)
-        myDict[i]['expression']=mad._libmadx.get_var(i)
-        myDict[i]['value']=mad.globals[i]
+                my_dict[i]['knobs'].remove(j)
+        my_dict[i]['expression']=mad._libmadx.get_var(i)
+        my_dict[i]['value']=mad.globals[i]
     
-    if len(myDict)>0:
-        return pd.DataFrame(myDict).transpose()[['value','expression','parameters','knobs']].sort_index()
+    if len(my_dict)>0:
+        return pd.DataFrame(my_dict).transpose()[['value','expression','parameters','knobs']].sort_index()
     else:
         return pd.DataFrame()
 
-def _independentVariablesDF(mad):
+def _independent_variables_df(mad):
     '''
     Extract the pandas DF with the independent variables of the MAD-X handle.
     
@@ -210,56 +210,56 @@ def _independentVariablesDF(mad):
     See madxp/examples/variablesExamples/000_run.py
     '''
 
-    depDF=_dependentVariablesDF(mad)
-    #if len(depDF)>0:
-    #    aux=list(depDF['knobs'].values)
+    dep_df=_dependent_variables_df(mad)
+    #if len(dep_df)>0:
+    #    aux=list(dep_df['knobs'].values)
     #    aux=list(itertools.chain.from_iterable(aux))
     #fundamentalSet=set(np.unique(aux))
-    independentVariableSet=set(mad.globals)-set(depDF.index)
-    myDict={}
-    for i in independentVariableSet:
-        myDict[i]={}
+    independent_variable_set=set(mad.globals)-set(dep_df.index)
+    my_dict={}
+    for i in independent_variable_set:
+        my_dict[i]={}
         if mad._libmadx.get_var_type(i)==0:
-            myDict[i]['constant']=True
-            # myDict[i]['knob']=False
+            my_dict[i]['constant']=True
+            # my_dict[i]['knob']=False
         else:
-            myDict[i]['constant']=False
+            my_dict[i]['constant']=False
             # if i in fundamentalSet:
-            #    myDict[i]['knob']=True
+            #    my_dict[i]['knob']=True
             # else:
-            #    myDict[i]['knob']=False
-        myDict[i]['value']=mad.globals[i]
+            #    my_dict[i]['knob']=False
+        my_dict[i]['value']=mad.globals[i]
     
-    return pd.DataFrame(myDict).transpose()[['value','constant']].sort_index()
+    return pd.DataFrame(my_dict).transpose()[['value','constant']].sort_index()
 
-def _knobsFromParameters(parameters, indepDF, depDF):
+def _knobs_from_parameters(parameters, indep_df, dep_df):
     '''
     Extract the list of knobs from a list of parameters.
     
     Args:
         parameters: list of parameters
-        indepDF: independent variable DF
-        depDF: dependent variable DF
+        indep_df: independent variable DF
+        dep_df: dependent variable DF
 
     Returns:
         The list of knobs corresponding to the list of parameters.
     
     See madxp/examples/variablesExamples/000_run.py
     '''
-    myKnobs=[]
+    my_knobs=[]
     for i in parameters:
-        if i in indepDF.index:
-            if not indepDF.loc[i]['constant']:
-                myKnobs.append([i])
+        if i in indep_df.index:
+            if not indep_df.loc[i]['constant']:
+                my_knobs.append([i])
         else:
             try:
-                myKnobs.append(depDF.loc[i]['knobs'])
+                my_knobs.append(dep_df.loc[i]['knobs'])
             except:
                 print(f'Variable {i} not defined! Cosidered as a knob.')
-                myKnobs.append([i])
-    return list(itertools.chain.from_iterable(myKnobs))
+                my_knobs.append([i])
+    return list(itertools.chain.from_iterable(my_knobs))
 
-def sequenceDF(mad,sequenceName):
+def sequence_df(mad,sequenceName):
     '''
     Extract a pandas DF of the list of the elements and all their attributes for a given sequence.
     
@@ -272,43 +272,43 @@ def sequenceDF(mad,sequenceName):
     
     See madxp/examples/variablesExamples/000_run.py
     '''
-    myList=[]
+    my_list=[]
     sequences=mad.sequence
-    mySequence=sequences[sequenceName]
-    indepDF=_independentVariablesDF(mad)
-    depDF=_dependentVariablesDF(mad)
+    my_sequence=sequences[sequenceName]
+    indep_df=_independent_variables_df(mad)
+    dep_df=_dependent_variables_df(mad)
 
-    for myIndex, _ in enumerate(mySequence.elements):
-        aux=mad._libmadx.get_element(sequenceName,myIndex)
-        myDict={}
-        myDict['parameters']=[]
+    for my_index, _ in enumerate(my_sequence.elements):
+        aux=mad._libmadx.get_element(sequenceName,my_index)
+        my_dict={}
+        my_dict['parameters']=[]
         for i in aux:
-            myDict[i]=aux[i]
-        del myDict['data']
+            my_dict[i]=aux[i]
+        del my_dict['data']
 
         for i in aux['data']:
-            myDict[i]=str(aux['data'][i])
+            my_dict[i]=str(aux['data'][i])
             if isinstance(aux['data'][i], cpymad.types.Parameter):
-                myDict[i+' value']=aux['data'][i].value
-                myDict['parameters']+=_extractParameters(str(aux['data'][i].expr))
-        myDict['parameters']=np.unique(myDict['parameters'])
-        myList.append(myDict)
-    myDF=pd.DataFrame(myList)
-    myDF=myDF.set_index('name')
-    myDF.index.name=''
-    myDF['knobs']=myDF['parameters'].apply(lambda x: _knobsFromParameters(x,indepDF,depDF))
-    firstColumns=['position','parent','base_type','length','parameters','knobs']
-    lastColumns=list(set(myDF.columns)-set(firstColumns))
-    lastColumns.sort()
-    return myDF[firstColumns+lastColumns]
+                my_dict[i+' value']=aux['data'][i].value
+                my_dict['parameters']+=_extract_parameters(str(aux['data'][i].expr))
+        my_dict['parameters']=np.unique(my_dict['parameters'])
+        my_list.append(my_dict)
+    my_df=pd.DataFrame(my_list)
+    my_df=my_df.set_index('name')
+    my_df.index.name=''
+    my_df['knobs']=my_df['parameters'].apply(lambda x: _knobs_from_parameters(x,indep_df,dep_df))
+    first_columns=['position','parent','base_type','length','parameters','knobs']
+    last_columns=list(set(my_df.columns)-set(first_columns))
+    last_columns.sort()
+    return my_df[first_columns+last_columns]
 
-def knobsDF(myDF):
+def knobs_df(my_df):
     '''
     Extract the knob list of a pandas DF (it assumes that DF has a column called "knobs")
     and contanting lists
     
     Args:
-        myDF: a pandas DF (it assumes that DF has a column called "knobs").
+        my_df: a pandas DF (it assumes that DF has a column called "knobs").
 
     Returns:
         A data frame of knobs.
@@ -318,34 +318,34 @@ def knobsDF(myDF):
     '''
     import itertools
     import numpy as np
-    aux= list(myDF['knobs'].values)
+    aux= list(my_df['knobs'].values)
     aux= list(np.unique(list(itertools.chain.from_iterable(aux))))
-    myDict={}
+    my_dict={}
     for i in aux:
-        myDict[i]={}
-        filterDF=knobDF(i, myDF)
-        myDict[i]['multeplicity']=len(filterDF)
-        myDict[i]['dependences']=list(filterDF.index)
-    return pd.DataFrame(myDict).transpose().sort_values('multeplicity', ascending=False)
+        my_dict[i]={}
+        filter_df=knob_df(i, my_df)
+        my_dict[i]['multeplicity']=len(filter_df)
+        my_dict[i]['dependences']=list(filter_df.index)
+    return pd.DataFrame(my_dict).transpose().sort_values('multeplicity', ascending=False)
 
 
-def knobDF(myKnob,myDF):
+def knob_df(my_knob,my_df):
     '''
-    Filter the pandas DF, 'myDF', returning only the rows that depend on the selected knob, 'myKnob'.
+    Filter the pandas DF, 'my_df', returning only the rows that depend on the selected knob, 'my_knob'.
     
     Args:
-        myKnob: the name of the knob to filter.
-        myDF: a pandas DF (it assumes that DF has a column called "knobs").
+        my_knob: the name of the knob to filter.
+        my_df: a pandas DF (it assumes that DF has a column called "knobs").
 
     Returns:
-        The filter pandas DF showing the rows that depend on the selected knob, 'myKnob'.
+        The filter pandas DF showing the rows that depend on the selected knob, 'my_knob'.
     
     See madxp/examples/variablesExamples/000_run.py
 
     '''
-    return myDF[myDF['knobs'].apply(lambda x: myKnob in x)]
+    return my_df[my_df['knobs'].apply(lambda x: my_knob in x)]
 
-def tableDF(table):
+def table_df(table):
     '''
     Extract the pandas DF of a MAD-X table.
     
@@ -357,12 +357,12 @@ def tableDF(table):
     
     See madxp/examples/variablesExamples/000_run.py
     '''
-    myDF=pd.DataFrame(dict(table))
-    myDF=myDF.set_index('name', drop=False)
-    myDF.index.name=''
-    return myDF
+    my_df=pd.DataFrame(dict(table))
+    my_df=my_df.set_index('name', drop = False)
+    my_df.index.name=''
+    return my_df
 
-def twissDF(table):
+def twiss_df(table):
     '''
     Extract the pandas DF of a MAD-X twiss table.
     
@@ -374,12 +374,12 @@ def twissDF(table):
     
     See madxp/examples/variablesExamples/000_run.py
     '''
-    myDF=pd.DataFrame(dict(table))
-    myDF=myDF.set_index('name', drop=False)
-    myDF.index.name=''
-    return myDF
+    my_df=pd.DataFrame(dict(table))
+    my_df=my_df.set_index('name', drop = False)
+    my_df.index.name=''
+    return my_df
 
-def summDF(table):
+def summ_df(table):
     '''
     Extract the pandas DF of a MAD-X summary table.
     
@@ -391,36 +391,36 @@ def summDF(table):
     
     See madxp/examples/variablesExamples/000_run.py
     '''
-    myDF=pd.DataFrame(dict(table))
-    myDF.index=[table._name]
-    return myDF
+    my_df=pd.DataFrame(dict(table))
+    my_df.index=[table._name]
+    return my_df
 
-def showElement(elementName, sequenceDF):
+def show_element(element_name, sequence_df):
     '''
-    Print and return the row of the 'sequenceDF' corresponding to a given 'elementName'.
+    Print and return the row of the 'sequence_df' corresponding to a given 'element_name'.
     
     Args:
-        elementName: the name
+        element_name: the name
 
     Returns:
-        A single-row DF corresponding to the 'elementName' of 'sequenceDF'.
+        A single-row DF corresponding to the 'element_name' of 'sequence_df'.
     
     See madxp/examples/variablesExamples/000_run.py
     '''
-    aux=sequenceDF.loc[[elementName]].dropna(axis=1)
+    aux=sequence_df.loc[[element_name]].dropna(axis=1)
     print(aux.transpose().to_string())
     return(aux)
 
 
 # %% Interpolation 
 
-def tableInterpolationDF(myS_List, myTable):
+def table_interpolation_df(my_s_list, my_table):
     '''
     Thanks to H. Bartosik for sharing his code and for the discussion.
     
     This function will interpolate in a list of s-positions the MAD-X table passed as argument.
     This table has to be a full MAD-X twiss table (e.g., 'e1', 'fint',... columns have to be present).
-    For each element in myS_List there will be a twiss-command of a short sequence. 
+    For each element in my_s_list there will be a twiss-command of a short sequence. 
     This can be time consuming for long lists. It this case please look to MAD-X interpolate command at
     http://mad.web.cern.ch/mad/webguide/manual.html#Ch19.S10.
 
@@ -428,8 +428,8 @@ def tableInterpolationDF(myS_List, myTable):
     The twiss will be performed with given initial values http://mad.web.cern.ch/mad/webguide/manual.html#Ch19.S3.
 
     Args:
-        myS_List: list of s-position to be evaluated
-        myTable: a MAD-X twiss table.
+        my_s_list: list of s-position to be evaluated
+        my_table: a MAD-X twiss table.
 
     Returns:
         The pandas DF with the interpolated values. 
@@ -437,27 +437,27 @@ def tableInterpolationDF(myS_List, myTable):
     See madxp/examples/variablesExamples/000_run.py
 
     '''
-    # myS_List=[2.8], myTable=mt.tableDF(mad.table.twiss)
-    myList=[]
+    # my_s_list=[2.8], my_table=mt.table_df(mad.table.twiss)
+    my_list=[]
     madx=Madx(stdout=False)
 
-    for myS in myS_List:
+    for my_s in my_s_list:
         try:
-            startCondition=myTable[myTable['s']<myS].index[-1]
+            start_condition=my_table[my_table['s']<my_s].index[-1]
         except:
-            startCondition=myTable.index[0]
+            start_condition=my_table.index[0]
         try:
-            myElement=myTable[myTable['s']>=myS].index[0]
+            my_element=my_table[my_table['s']>=my_s].index[0]
         except:
-            myElement=myTable.index[-1]
+            my_element=my_table.index[-1]
         
-        myElementRow= myTable.loc[myElement]
-        startConditionRow= myTable.loc[startCondition]
-        if myElementRow.s==myS:
-            interpolation=pd.DataFrame(myElementRow).transpose()
+        my_element_row= my_table.loc[my_element]
+        start_condition_row= my_table.loc[start_condition]
+        if my_element_row.s==my_s:
+            interpolation=pd.DataFrame(my_element_row).transpose()
         else:
-            assert myElementRow.l>0 # The elements need to be thick
-            if myElementRow.keyword in ['quadrupole',
+            assert my_element_row.l>0 # The elements need to be thick
+            if my_element_row.keyword in ['quadrupole',
                                         'drift', 
                                         'sextupole', 
                                         'octupole', 
@@ -466,47 +466,47 @@ def tableInterpolationDF(myS_List, myTable):
                                         'vmonitor',
                                         'monitor',
                                         ]:
-                myString=f'''
+                my_string=f'''
                     my_special_element: quadrupole,
-                    l= {myS-startConditionRow.s},
-                    k1={myElementRow.k1l/myElementRow.l}, 
-                    k1s={myElementRow.k1sl/myElementRow.l},
-                    tilt={myElementRow.tilt};
+                    l= {my_s-start_condition_row.s},
+                    k1={my_element_row.k1l/my_element_row.l}, 
+                    k1s={my_element_row.k1sl/my_element_row.l},
+                    tilt={my_element_row.tilt};
                 '''
-            elif myElementRow.keyword in ['sbend']:
+            elif my_element_row.keyword in ['sbend']:
                 # 
-                myString=f'''
+                my_string=f'''
                     my_special_element: sbend,
-                    l={myS-startConditionRow.s},
-                    angle={myElementRow.angle/myElementRow.l*{myS-startConditionRow.s}},
-                    tilt={myElementRow.tilt},
-                    k1={myElementRow.k1l/myElementRow.l},
-                    e1={myElementRow.e1},
-                    fint={myElementRow.fint},
+                    l={my_s-start_condition_row.s},
+                    angle={my_element_row.angle/my_element_row.l*{my_s-start_condition_row.s}},
+                    tilt={my_element_row.tilt},
+                    k1={my_element_row.k1l/my_element_row.l},
+                    e1={my_element_row.e1},
+                    fint={my_element_row.fint},
                     fintx=0,
-                    hgap={myElementRow.hgap},
-                    k1s={myElementRow.k1sl/myElementRow.l},
-                    h1={myElementRow.h1},
+                    hgap={my_element_row.hgap},
+                    k1s={my_element_row.k1sl/my_element_row.l},
+                    h1={my_element_row.h1},
                     h2=0,
                     kill_exi_fringe=0;
                 '''
-            elif myElementRow.keyword in ['rbend']:
-                myString=f'''
+            elif my_element_row.keyword in ['rbend']:
+                my_string=f'''
                     option, rbarc=false;
                     my_special_element: rbend,
-                    l= {myS-startConditionRow.s},
-                    angle={myElementRow.angle/myElementRow.l*{myS-startConditionRow.s}},
-                    k1={myElementRow.k1l/myElementRow.l},
-                    e1={myElementRow.e1},
-                    fint={myElementRow.fint},
+                    l= {my_s-start_condition_row.s},
+                    angle={my_element_row.angle/my_element_row.l*{my_s-start_condition_row.s}},
+                    k1={my_element_row.k1l/my_element_row.l},
+                    e1={my_element_row.e1},
+                    fint={my_element_row.fint},
                     fintx=0,
-                    hgap={myElementRow.hgap},
-                    k1s={myElementRow.k1sl/myElementRow.l},
-                    h1={myElementRow.h1},
+                    hgap={my_element_row.hgap},
+                    k1s={my_element_row.k1sl/my_element_row.l},
+                    h1={my_element_row.h1},
                     h2=0,
                     kill_exi_fringe=0;
                 '''
-            elif myElementRow.keyword in ['matrix', 
+            elif my_element_row.keyword in ['matrix', 
                                           'collimator',
                                           'elseparator',
                                           'hacdipole',
@@ -518,68 +518,68 @@ def tableInterpolationDF(myS_List, myTable):
                                           'kicker',
                                           'solenoid'
                                           'rfcavity']:
-                print(f'The element keyword {myElementRow.keyword} has not been implemented.')
-                print(f'Consider to remove the interpolating position at {myS} m.')
+                print(f'The element keyword {my_element_row.keyword} has not been implemented.')
+                print(f'Consider to remove the interpolating position at {my_s} m.')
                 return
 
-            myString =  myString + f''' 
-                my_special_sequence: sequence, l={myS-startConditionRow.s}, refer=entry;
-                at_{myS:}:my_special_element, at=0;
+            my_string =  my_string + f''' 
+                my_special_sequence: sequence, l={my_s-start_condition_row.s}, refer=entry;
+                at_{my_s:}:my_special_element, at=0;
                 endsequence;
                 
                 beam, sequence=my_special_sequence; ! we assume normalized elements
                 use, sequence=my_special_sequence;
                 
                 twiss, 
-                betx  = {startConditionRow.betx}, 
-                alfx  = {startConditionRow.alfx}, 
-                mux   = {startConditionRow.mux}, 
-                bety  = {startConditionRow.bety}, 
-                alfy  = {startConditionRow.alfy},
-                muy   = {startConditionRow.muy}, 
-                dx    = {startConditionRow.dx},
-                dpx   = {startConditionRow.dpx},
-                dy    = {startConditionRow.dy},
-                dpy   = {startConditionRow.dpy},
-                x     = {startConditionRow.x},
-                px    = {startConditionRow.px},
-                y     = {startConditionRow.y},
-                py    = {startConditionRow.py},
-                t     = {startConditionRow.t},
-                pt    = {startConditionRow.pt},
-                wx    = {startConditionRow.wx},
-                phix  = {startConditionRow.phix},
-                dmux  = {startConditionRow.dmux},
-                wy    = {startConditionRow.wy},
-                phiy  = {startConditionRow.phiy},
-                dmuy  = {startConditionRow.dmuy},
-                ddx   = {startConditionRow.ddx},
-                ddy   = {startConditionRow.ddy},
-                ddpx  = {startConditionRow.ddpx},
-                ddpy  = {startConditionRow.ddpy},
-                r11   = {startConditionRow.r11},
-                r12   = {startConditionRow.r12},
-                r21   = {startConditionRow.r21},
-                r22   = {startConditionRow.r22},
+                betx  = {start_condition_row.betx}, 
+                alfx  = {start_condition_row.alfx}, 
+                mux   = {start_condition_row.mux}, 
+                bety  = {start_condition_row.bety}, 
+                alfy  = {start_condition_row.alfy},
+                muy   = {start_condition_row.muy}, 
+                dx    = {start_condition_row.dx},
+                dpx   = {start_condition_row.dpx},
+                dy    = {start_condition_row.dy},
+                dpy   = {start_condition_row.dpy},
+                x     = {start_condition_row.x},
+                px    = {start_condition_row.px},
+                y     = {start_condition_row.y},
+                py    = {start_condition_row.py},
+                t     = {start_condition_row.t},
+                pt    = {start_condition_row.pt},
+                wx    = {start_condition_row.wx},
+                phix  = {start_condition_row.phix},
+                dmux  = {start_condition_row.dmux},
+                wy    = {start_condition_row.wy},
+                phiy  = {start_condition_row.phiy},
+                dmuy  = {start_condition_row.dmuy},
+                ddx   = {start_condition_row.ddx},
+                ddy   = {start_condition_row.ddy},
+                ddpx  = {start_condition_row.ddpx},
+                ddpy  = {start_condition_row.ddpy},
+                r11   = {start_condition_row.r11},
+                r12   = {start_condition_row.r12},
+                r21   = {start_condition_row.r21},
+                r22   = {start_condition_row.r22},
                 table=special_twiss;
                 '''
-            madx.input(myString)
+            madx.input(my_string)
             madx.input('delete, sequence=my_special_sequence;my_special_element=0;')
-            interpolation=tableDF(madx.table.special_twiss).iloc[[1]]
+            interpolation=table_df(madx.table.special_twiss).iloc[[1]]
             interpolation.keyword='interpolation'
-            interpolation.s=myS
-        myList.append(interpolation)
+            interpolation.s=my_s
+        my_list.append(interpolation)
         gc.collect()
-    return pd.concat(myList)
+    return pd.concat(my_list)
 
-def pythonData2mad(mad, pythonData, verbose=False):
+def python_data_to_mad(mad, python_data, verbose=False):
     '''
     It assigns a dictionary to a MAD-X handle.
     '''
-    for i in pythonData:
+    for i in python_data:
         if i[0]!='_': 
-            if isinstance(pythonData[i],float) or isinstance(pythonData[i],int):
-                mad.input(f'{i}={pythonData[i]};')
+            if isinstance(python_data[i],float) or isinstance(python_data[i],int):
+                mad.input(f'{i}={python_data[i]};')
             else:
                 if verbose:
                     print(f'{i} was not assigned to the MAD-X instance.')
@@ -588,15 +588,15 @@ def pythonData2mad(mad, pythonData, verbose=False):
                 print(f'{i} was not assigned to the MAD-X instance.')
 
 
-def mad2pythonData(mad, pythonData, verbose=False):
+def mad_to_python_data(mad, python_data, verbose=False):
     '''
-    It assigns the variables present in pythonData from the values of the
+    It assigns the variables present in python_data from the values of the
     MAD-X workspace.
     '''
-    for i in pythonData:
+    for i in python_data:
         try:
             a=mad.globals[i]
-            pythonData[i]=a
+            python_data[i]=a
         except:
             if verbose:
                 print(f'{i} not found in MAD-X instance.')
