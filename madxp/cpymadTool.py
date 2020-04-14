@@ -71,7 +71,7 @@ def _extract_parameters(my_string):
         return []
     else:
         for i in [
-        '*',,'->','-','/','+','^','(',')','[', ']',',','\'','None']:
+        '*','->','-','/','+','^','(',')','[',']',',','\'','None']:
             my_string=my_string.replace(i,' ')
         my_list=my_string.split(' ')
         my_list=list(np.unique(my_list))
