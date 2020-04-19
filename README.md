@@ -512,7 +512,7 @@ mt.knobs_df(mt.sequence_df(mad, 'my_sequence'))
     <tr>
       <th>none</th>
       <td>3</td>
-      <td>[my_sequence$start, q1, my_sequence$end]</td>
+      <td>[my_sequence\$start, q1, my_sequence\$end]</td>
     </tr>
     <tr>
       <th>a</th>
