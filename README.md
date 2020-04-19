@@ -80,20 +80,6 @@ mt.sequences_df(mad)
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -110,7 +96,6 @@ mt.sequences_df(mad)
     </tr>
   </tbody>
 </table>
-</div>
 
 
 
@@ -128,24 +113,6 @@ mt.beams_df(mad)
 
     The sequence my_sequence has no beam attached.
 
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -155,7 +122,6 @@ mt.beams_df(mad)
   <tbody>
   </tbody>
 </table>
-</div>
 
 
 
@@ -186,23 +152,6 @@ There are three df's representing MAD-X global workspace.
 my_variable_dict['constant_df']
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -281,8 +230,6 @@ my_variable_dict['constant_df']
     </tr>
   </tbody>
 </table>
-</div>
-
 
 
 NB: in addition to the MAD-X predefined constants, **i** (user defined constant) is present too.
@@ -294,21 +241,6 @@ my_variable_dict['independent_variable_df']
 
 
 
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -343,7 +275,6 @@ my_variable_dict['independent_variable_df']
     </tr>
   </tbody>
 </table>
-</div>
 
 
 
@@ -363,20 +294,7 @@ my_variable_dict['dependent_variable_df']
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -411,7 +329,6 @@ my_variable_dict['dependent_variable_df']
     </tr>
   </tbody>
 </table>
-</div>
 
 
 
@@ -437,20 +354,7 @@ mt.sequence_df(mad, 'my_sequence')
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -578,8 +482,6 @@ mt.sequence_df(mad, 'my_sequence')
   </tbody>
 </table>
 <p>3 rows × 81 columns</p>
-</div>
-
 
 
 NB:
@@ -597,20 +499,7 @@ mt.knobs_df(mt.sequence_df(mad, 'my_sequence'))
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -647,7 +536,6 @@ mt.knobs_df(mt.sequence_df(mad, 'my_sequence'))
     </tr>
   </tbody>
 </table>
-</div>
 
 
 
@@ -664,20 +552,7 @@ mt.knobs_df(my_variable_dict['dependent_variable_df'])
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -699,7 +574,6 @@ mt.knobs_df(my_variable_dict['dependent_variable_df'])
     </tr>
   </tbody>
 </table>
-</div>
 
 
 
@@ -713,20 +587,6 @@ mt.knob_df('myk1',mt.sequence_df(mad, 'my_sequence'))
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -806,8 +666,6 @@ mt.knob_df('myk1',mt.sequence_df(mad, 'my_sequence'))
   </tbody>
 </table>
 <p>1 rows × 81 columns</p>
-</div>
-
 
 
 One can do the same analysis for the dependent variables df.
@@ -820,20 +678,6 @@ mt.knob_df('f', my_variable_dict['dependent_variable_df'])
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -861,7 +705,6 @@ mt.knob_df('f', my_variable_dict['dependent_variable_df'])
     </tr>
   </tbody>
 </table>
-</div>
 
 
 
@@ -882,20 +725,6 @@ mt.sequences_df(mad)
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -912,7 +741,6 @@ mt.sequences_df(mad)
     </tr>
   </tbody>
 </table>
-</div>
 
 
 
@@ -926,20 +754,6 @@ mt.beams_df(mad)
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -995,8 +809,6 @@ mt.beams_df(mad)
   </tbody>
 </table>
 <p>1 rows × 32 columns</p>
-</div>
-
 
 
 To ease the visualization of a given element you can run
@@ -1089,21 +901,6 @@ mt.show_element('q1', mt.sequence_df(mad, 'my_sequence'))
 
 
 
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1183,7 +980,6 @@ mt.show_element('q1', mt.sequence_df(mad, 'my_sequence'))
   </tbody>
 </table>
 <p>1 rows × 78 columns</p>
-</div>
 
 
 
@@ -1197,21 +993,6 @@ my_variable_dict['independent_variable_df']
 
 
 
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1250,8 +1031,6 @@ my_variable_dict['independent_variable_df']
     </tr>
   </tbody>
 </table>
-</div>
-
 
 
 We can simply twiss the active sequence.
@@ -1319,20 +1098,6 @@ mt.table_df(mad.table.twiss)
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1508,8 +1273,6 @@ mt.table_df(mad.table.twiss)
   </tbody>
 </table>
 <p>5 rows × 256 columns</p>
-</div>
-
 
 
 and
@@ -1522,20 +1285,6 @@ mt.summ_df(mad.table.summ)
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1591,7 +1340,6 @@ mt.summ_df(mad.table.summ)
   </tbody>
 </table>
 <p>1 rows × 25 columns</p>
-</div>
 
 
 
@@ -1606,20 +1354,6 @@ mt.table_interpolation_df(my_s_list=np.linspace(2,3,11), my_table=mt.table_df(ma
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1915,8 +1649,6 @@ mt.table_interpolation_df(my_s_list=np.linspace(2,3,11), my_table=mt.table_df(ma
   </tbody>
 </table>
 <p>11 rows × 256 columns</p>
-</div>
-
 
 
 The table_interpolation_df is somehow equivalent to the *intepolate* flag of MAD-X, as you can see below
@@ -1960,21 +1692,6 @@ mt.table_df(mad.table.with_interpolation)
 
 
 
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2366,13 +2083,7 @@ mt.table_df(mad.table.with_interpolation)
   </tbody>
 </table>
 <p>14 rows × 256 columns</p>
-</div>
-
 
 
 but the proposed function can do the interpolation without a "live" MAD-X handle and sequence.
 
-
-```python
-
-```
