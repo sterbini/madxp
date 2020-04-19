@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='madxp',
-      version='0.01',
+      version='0.02',
       description='TODO',
       url='https://github.com/sterbini/madxp',
       author='Guido STERBINI',
