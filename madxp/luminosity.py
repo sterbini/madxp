@@ -1,5 +1,5 @@
 import numpy as np
-from cl2pd import particle
+from madxp import particle
 from scipy import integrate
 
 def beta(z, beta0, alpha_z0):
